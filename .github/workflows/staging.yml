@@ -1,0 +1,50 @@
+name: staging deploy workflow
+
+on:
+  workflow_dispatch:
+  push:
+    branches: 
+      - staging
+
+jobs:
+  build-docker:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: setup tags 1/2
+        run: echo "CUSTOM_TAG=staging-ci-${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+      - name: setup tags 2/2
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ${{ secrets.DOCKER_HUB_REGISTRY }}/appstud-swag-backend-node
+          tags: |
+            staging
+            ${{ env.CUSTOM_TAG }}
+      - name: login to registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.DOCKER_HUB_REGISTRY }}
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: build docker image
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+            RELEASE_NUMBER="${GITHUB_SHA}-${GITHUB_RUN_NUMBER}"
+
+#      - name: restart remote container
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.SSH_DEV_HOST }}
+#          username: ${{ secrets.SSH_DEV_USERNAME }}
+#          key: ${{ secrets.SSH_DEV_KEY }}
+#          port: ${{ secrets.SSH_DEV_PORT }}
+#          script: cd ~/swag && sudo docker-compose pull api-dev && sudo docker-compose up -d api-dev && sudo docker system prune  -f

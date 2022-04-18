@@ -1,0 +1,22 @@
+version: '3.1'
+services:
+  mongo:
+    container_name: swag-mongo
+    image: mongo:5.0.6-focal
+    ports:
+      - 127.0.0.1:27017:27017
+    volumes:
+      - "./mongo-share:/tmp/data"
+      - "./mongo-data:/data/db"
+  smtp4dev:
+    container_name: swag-smtp4dev
+    image: mailhog/mailhog:latest
+    volumes:
+      - "./smtp4dev:/smtp4dev"
+    #    environment:
+    #      MH_SMTP_BIND_ADDR: 0.0.0.0:25
+    #      MH_STORAGE: maildir
+    #      MH_MAILDIR_PATH: /smtp4dev
+    ports:
+      - 127.0.0.1:8085:8025
+      - 127.0.0.1:12345:1025

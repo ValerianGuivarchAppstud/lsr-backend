@@ -1,0 +1,14 @@
+.git
+.github
+.cache
+.idea
+.env
+node_modules
+build
+dist
+support
+Dockerfile
+docker-compose.yml
+**/node_modules
+**/dist
+files

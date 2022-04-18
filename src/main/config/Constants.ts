@@ -1,0 +1,3 @@
+export const APPLICATION_CONSTANTS = {
+  MIN_PASSWORD_LENGTH: 8
+}
