@@ -2,9 +2,6 @@ import { HttpRouteIdentifiers } from './HttpRouteIdentifiers'
 import { ProviderErrors } from '../../data/errors/ProviderErrors'
 import { logger, logRequestWithBody } from '../../domain/helpers/logs/Logging'
 import { starWildcardMatch } from '../../domain/helpers/MatcherUtils'
-import { Account } from '../../domain/models/account/Account'
-import { Authority } from '../../domain/models/auth/Authority'
-import { AuthenticationService } from '../../domain/services/AuthenticationService'
 import { HttpRequestMethod, HttpRoute, IHttpGateway, IHttpGatewayOptions } from '../../gateways/IHttpGateway'
 import fastify, {
   FastifyError,
@@ -22,7 +19,6 @@ import { IncomingHttpHeaders } from 'http'
 
 export class HttpGateway implements IHttpGateway {
   private readonly instance: FastifyInstance
-  private readonly authService: AuthenticationService
   private readonly logger = logger(this.constructor.name)
   private readonly swaggerUiUrl = '/swagger-ui'
   private readonly allowedOrigins: string[]
@@ -30,8 +26,7 @@ export class HttpGateway implements IHttpGateway {
   private readonly httpHost: string
   private routes: HttpRoute[]
 
-  constructor(p: { authService: AuthenticationService; httpPort: number; httpHost: string; requestMaxSize: number }) {
-    this.authService = p.authService
+  constructor(p: { httpPort: number; httpHost: string; requestMaxSize: number }) {
     this.allowedOrigins = ['*'] // FIXME change this
     this.instance = fastify({
       logger: this.logger,
@@ -154,24 +149,9 @@ export class HttpGateway implements IHttpGateway {
     })
   }
 
-  private authMiddleware(useAuth: Authority[]) {
-    return async (request: FastifyRequest) => {
-      if (useAuth && useAuth.length) {
-        const account = await this.authService
-          .getConnectedAccount(request.headers.authorization ?? '')
-          .catch(() => undefined)
-
-        if (!account) {
-          throw ProviderErrors.WrongCredentials()
-        }
-
-        if (!useAuth.includes(account.authority)) {
-          throw ProviderErrors.WrongCredentials()
-        }
-
-        request.account = account
-      }
-    }
+  private authMiddleware() {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    return async (request: FastifyRequest) => {}
   }
 
   addRoute(route: HttpRoute): void {
@@ -196,7 +176,7 @@ export class HttpGateway implements IHttpGateway {
           : {}
 
       const middleware: RouteShorthandOptions = {
-        preHandler: this.authMiddleware(route.useAuth),
+        preHandler: this.authMiddleware(),
         schema: schema
       }
 
@@ -228,10 +208,8 @@ export class HttpGateway implements IHttpGateway {
 
 // this declaration must be in scope of the typescript interpreter to work
 declare module 'fastify' {
-  interface FastifyRequest {
-    // you must reference the interface and not the type
-    account: Account
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface FastifyRequest {}
 }
 
 export class HttpError {

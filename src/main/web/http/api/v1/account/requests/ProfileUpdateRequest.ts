@@ -10,6 +10,7 @@ export type ProfileUpdateRequest = IHttpRequest<{
 
 export class ProfileUpdateRequestPayload {
   email: string
+  accountId: string
 
   static toProfile(): Partial<Profile> {
     const res: Partial<Profile> = {}

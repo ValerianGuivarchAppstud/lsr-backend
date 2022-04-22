@@ -1,6 +1,3 @@
-import { ProfileUpdateRequestPayload } from '../../../main/web/http/api/v1/account/requests/ProfileUpdateRequest'
-import { RegisterRequestPayload } from '../../../main/web/http/api/v1/auth/requests/RegisterRequest'
-import { HelpersAccountProfile } from '../../helpers/HelpersAccountProfile'
 import { TestHelpers } from '../../TestHelpers'
 
 let testHelpers: TestHelpers
@@ -18,8 +15,8 @@ beforeEach(async () => {
 
 afterAll(async () => {
   await testHelpers.stop()
-})
-
+}) /*
+/*
 test('Account creation workflow', async () => {
   const registerPayload: RegisterRequestPayload = {
     email: testHelpers.chance.email(),
@@ -38,26 +35,26 @@ test('Account creation workflow', async () => {
 
   /**
    * USER LOGIN
-   */
-  const jwtToken = await HelpersAccountProfile.login({
-    testHelpers: testHelpers,
-    payload: { email: registeredAccount.email, password: registerPayload.password }
-  })
-  expect(jwtToken.accessToken).toBeDefined()
-  expect(jwtToken.accessTokenExpiration).toBeDefined()
-  expect(jwtToken.refreshToken).toBeDefined()
-  expect(jwtToken.refreshTokenExpiration).toBeDefined()
+   */ /*
+const jwtToken = await HelpersAccountProfile.login({
+  testHelpers: testHelpers,
+  payload: { email: registeredAccount.email, password: registerPayload.password }
+})
+expect(jwtToken.accessToken).toBeDefined()
+expect(jwtToken.accessTokenExpiration).toBeDefined()
+expect(jwtToken.refreshToken).toBeDefined()
+expect(jwtToken.refreshTokenExpiration).toBeDefined()
 
-  const accountMe = await HelpersAccountProfile.me({
-    testHelpers: testHelpers,
-    token: jwtToken.accessToken
-  })
-  expect(accountMe.email).toBe(registerPayload.email)
-  expect(accountMe.profile.id).toBeDefined()
+const accountMe = await HelpersAccountProfile.me({
+  testHelpers: testHelpers,
+  token: jwtToken.accessToken
+})
+expect(accountMe.email).toBe(registerPayload.email)
+expect(accountMe.profile.id).toBeDefined() /*
 
-  /**
-   * UPDATE ACCOUNT
-   */
+/**
+ * UPDATE ACCOUNT
+ */ /*
   const accountMeUpdatedPayload: ProfileUpdateRequestPayload = {
     email: testHelpers.chance.email()
   }
@@ -76,3 +73,4 @@ test('Account creation workflow', async () => {
   expect(accountMe2.email).toBe(accountMeUpdated.email)
   expect(accountMe2.profile.id).toBe(accountMeUpdated.profile.id)
 })
+*/

@@ -10,6 +10,15 @@ export class ProviderErrors {
     })
   }
 
+
+  static AccountAlreadyCreated(): GenericError {
+    return GenericError.of({
+      statusCode: HttpStatus.UNAUTHORIZED,
+      message: 'This email is already used by a created account',
+      code: 'ACCOUNT_ALREADY_CREATED'
+    })
+  }
+
   static WrongToken(): GenericError {
     return GenericError.of({
       statusCode: HttpStatus.UNAUTHORIZED,
@@ -50,11 +59,43 @@ export class ProviderErrors {
     })
   }
 
-  static AccountAlreadyCreated(): GenericError {
+  static CharacterAlreadyCreated(name: string): GenericError {
     return GenericError.of({
       statusCode: HttpStatus.UNAUTHORIZED,
-      message: 'This email is already used by a created account',
-      code: 'ACCOUNT_ALREADY_CREATED'
+      message: 'The character' + name + ' already exists',
+      code: 'CHARACTER_ALREADY_CREATED'
+    })
+  }
+
+  static RollNotEnoughPf(): GenericError {
+    return GenericError.of({
+      statusCode: HttpStatus.METHOD_FAILURE,
+      message: 'Pas assez de Pf !',
+      code: 'ROLL_NOT_ENOUGH_PF'
+    })
+  }
+
+  static RollWrongEmpiricalRequest(): GenericError {
+    return GenericError.of({
+      statusCode: HttpStatus.METHOD_FAILURE,
+      message: 'Erreur dans la requête empirique',
+      code: 'ROLL_WRONG_EMPIRICAL_REQUEST'
+    })
+  }
+
+  static RollNotEnoughPp(): GenericError {
+    return GenericError.of({
+      statusCode: HttpStatus.METHOD_FAILURE,
+      message: 'Pas assez de Pp !',
+      code: 'ROLL_NOT_ENOUGH_PP'
+    })
+  }
+
+  static RollNotEnoughArcane(): GenericError {
+    return GenericError.of({
+      statusCode: HttpStatus.METHOD_FAILURE,
+      message: 'Pas assez d\'arcane !',
+      code: 'ROLL_NOT_ENOUGH_ARCANE'
     })
   }
 }

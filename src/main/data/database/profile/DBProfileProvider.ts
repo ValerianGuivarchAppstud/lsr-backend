@@ -1,7 +1,7 @@
 import { DBProfile, DBProfileModel } from './DBProfile'
 import { filterNullAndUndefinedAndEmpty } from '../../../domain/helpers/ArraysHelpers'
 import { Profile } from '../../../domain/models/account/Profile'
-import { IProfileProvider } from '../../../domain/providers/IProfileProvider'
+import { IProfileProvider } from '../../../../../../lsr-backend/src/main/domain/providers/IProfileProvider'
 import { ProviderErrors } from '../../errors/ProviderErrors'
 
 export class DBProfileProvider implements IProfileProvider {

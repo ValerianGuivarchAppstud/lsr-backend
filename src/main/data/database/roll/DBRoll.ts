@@ -1,0 +1,34 @@
+import { Document, Schema, PaginateModel, model } from 'mongoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
+
+export interface DBRoll extends Document {
+  rollerName: string
+  rollType: string
+  date: Date
+  secret: boolean
+  focus: boolean
+  power: boolean
+  proficiency: boolean
+  benediction: number
+  malediction: number
+  result: number[]
+  success: number | null
+}
+
+export const DBRollSchema = new Schema<DBRoll, DBRollModelType<DBRoll>>({
+  rollerName: { type: String, required: true },
+  rollType: { type: String, required: true },
+  date: { type: Date, required: true },
+  secret: { type: Boolean, required: true },
+  focus: { type: Boolean, required: true },
+  power: { type: Boolean, required: true },
+  proficiency: { type: Boolean, required: true },
+  benediction: { type: Number, required: true },
+  malediction: { type: Number, required: true },
+  result: { type: [Number], required: true },
+  success: { type: Number, required: false }
+}).plugin(mongoosePaginate)
+
+type DBRollModelType<T extends Document> = PaginateModel<T>
+
+export const DBRollModel = model<DBRoll>('roll', DBRollSchema) as DBRollModelType<DBRoll>
