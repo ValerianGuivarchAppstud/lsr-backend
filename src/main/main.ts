@@ -1,19 +1,25 @@
 import { BackendApplicationParams } from './config/BackendApplicationParams'
 import { DBAccountProvider } from './data/database/account/DBAccountProvider'
+import { DBCharacterProvider } from './data/database/character/DBCharacterProvider'
 import { MongoGateway } from './data/database/MongoGateway'
 import { DBProfileProvider } from './data/database/profile/DBProfileProvider'
+import { DBRollProvider } from './data/database/roll/DBRollProvider'
 import { EmailAuthProvider } from './data/security/EmailAuthProvider'
 import { JwtTokenProvider } from './data/security/JwtTokenProvider'
 import { logger } from './domain/helpers/logs/Logging'
 import { AccountService } from './domain/services/AccountService'
 import { AdminAccountService } from './domain/services/admin/AdminAccountService'
 import { AuthenticationService } from './domain/services/AuthenticationService'
+import { CharacterService } from './domain/services/CharacterService'
+import { RollService } from './domain/services/RollService'
 import { IHttpGateway, IHttpGatewayOptions } from './gateways/IHttpGateway'
 import { IMongoGateway } from './gateways/IMongoGateway'
 import { AccountController } from './web/http/api/v1/account/AccountController'
 import { AdminAccountController } from './web/http/api/v1/admin/accounts/AdminAccountController'
 import { AdminAuthenticationController } from './web/http/api/v1/admin/auth/AuthenticationController'
 import { AuthenticationController } from './web/http/api/v1/auth/AuthenticationController'
+import { CharacterController } from './web/http/api/v1/character/CharacterController'
+import { RollController } from './web/http/api/v1/roll/RollController'
 import { StatusController } from './web/http/api/v1/utils/StatusController'
 import { HttpGateway } from './web/http/HttpGateway'
 import { config } from 'dotenv'
@@ -38,6 +44,8 @@ export class BackendApplication {
     const profileProvider = new DBProfileProvider()
     const tokenProvider = new JwtTokenProvider({ jwtSecret: p.jwt.secret })
     const emailAuthProvider = new EmailAuthProvider(accountProvider)
+    const characterProvider = new DBCharacterProvider()
+    const rollProvider = new DBRollProvider()
 
     /**
      * SERVICES
@@ -58,27 +66,37 @@ export class BackendApplication {
       accountProvider: accountProvider,
       profileProvider: profileProvider
     })
+    const characterService = new CharacterService({
+      characterProvider: characterProvider
+    })
+    const rollService = new RollService({
+      rollProvider: rollProvider,
+      characterProvider: characterProvider
+    })
 
     /**
      * CONTROLLERS
      */
     const http = new HttpGateway({
-      authService: authenticationService,
       httpPort: p.http.port,
       httpHost: p.http.host,
       requestMaxSize: p.http.requestMaxSize
     })
-    new AuthenticationController({ httpGateway: http, service: authenticationService })
-    new AccountController({ httpGateway: http, accountService: accountService })
-    new StatusController({ httpGateway: http, accountProvider: accountProvider, managementSecret: p.management.secret })
-
     new AdminAuthenticationController({
       httpGateway: http,
       authenticationService: authenticationService,
-      // eslint-disable-next-line no-process-env
-      enabledRegisterEndpoint: ['local', 'develop', 'staging', 'test'].includes(`${process.env.NODE_ENV}`)
+      enabledRegisterEndpoint: true
     })
     new AdminAccountController({ httpGateway: http, accountService: adminAccountService })
+    new AuthenticationController({ httpGateway: http, service: authenticationService })
+    new AccountController({ httpGateway: http, accountService: accountService })
+    new CharacterController({ httpGateway: http, characterService: characterService, rollService: rollService })
+    new RollController({ httpGateway: http, rollService: rollService })
+    new StatusController({
+      httpGateway: http,
+      characterProvider: characterProvider,
+      managementSecret: p.management.secret
+    })
 
     this.dependencies = new AppDependencies({
       databaseGateway: database,

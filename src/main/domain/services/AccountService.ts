@@ -3,7 +3,7 @@ import { logger } from '../helpers/logs/Logging'
 import { Account } from '../models/account/Account'
 import { Profile } from '../models/account/Profile'
 import { IAccountProvider } from '../providers/IAccountProvider'
-import { IProfileProvider } from '../providers/IProfileProvider'
+import { IProfileProvider } from '../../../../../lsr-backend/src/main/domain/providers/IProfileProvider'
 
 export class AccountService {
   private accountProvider: IAccountProvider

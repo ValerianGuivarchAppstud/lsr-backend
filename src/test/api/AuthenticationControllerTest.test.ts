@@ -1,9 +1,4 @@
-import { HttpRequestMethod } from '../../main/gateways/IHttpGateway'
-import { AccountVM } from '../../main/web/http/api/v1/account/entities/AccountVM'
-import { JWTTokenVM } from '../../main/web/http/api/v1/auth/entities/JWTTokenVM'
-import { RegisterRequestPayload } from '../../main/web/http/api/v1/auth/requests/RegisterRequest'
 import { TestHelpers } from '../TestHelpers'
-import { constants } from 'http2'
 
 let testHelpers: TestHelpers
 
@@ -20,7 +15,8 @@ beforeEach(async () => {
 
 afterAll(async () => {
   await testHelpers.stop()
-})
+}) /*
+/*
 
 test('POST /api/v1/auth/register - Should get 200', async () => {
   const registerPayload: RegisterRequestPayload = { email: testHelpers.chance.email(), password: 'password' }
@@ -53,7 +49,7 @@ test('POST /api/v1/auth/register - Should get 200', async () => {
 
   /**
    * CHECK A FAILED LOGIN
-   */
+   */ /*
   const loginPayloadFailed: RegisterRequestPayload = { email: testHelpers.chance.email(), password: 'passwordpassword' }
   const resLoginFailed = await testHelpers.getRouter().inject({
     method: 'POST',
@@ -62,3 +58,4 @@ test('POST /api/v1/auth/register - Should get 200', async () => {
   })
   expect(resLoginFailed.statusCode).toBe(constants.HTTP_STATUS_UNAUTHORIZED)
 })
+*/

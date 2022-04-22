@@ -35,7 +35,7 @@ export class AccountController {
   }
 
   async get(req: GetStatusRequest): Promise<AccountVM> {
-    const account = await this.accountService.findOneAccountById(req.account.id)
+    const account = await this.accountService.findOneAccountById(req.accountId)
     const profile = await this.accountService.findOneProfileByAccountId(account.id)
 
     return AccountVM.of({
@@ -45,7 +45,7 @@ export class AccountController {
   }
 
   async update(req: ProfileUpdateRequest): Promise<AccountVM> {
-    const account = await this.accountService.findOneAccountById(req.account.id)
+    const account = await this.accountService.findOneAccountById(req.accountId)
     const profile = await this.accountService.findOneProfileByAccountId(account.id)
 
     const accountUpdated = await this.accountService.updateAccount({

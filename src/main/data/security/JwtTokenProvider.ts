@@ -1,7 +1,7 @@
 import { Authentication } from '../../domain/models/auth/Authentication'
 import { Authority } from '../../domain/models/auth/Authority'
 import { JWTToken } from '../../domain/models/auth/JWTToken'
-import { ITokenProvider } from '../../domain/providers/ITokenProvider'
+import { ITokenProvider } from '../../../../../lsr-backend/src/main/domain/providers/ITokenProvider'
 import { ProviderErrors } from '../errors/ProviderErrors'
 import { decode, sign, TokenExpiredError, verify } from 'jsonwebtoken'
 

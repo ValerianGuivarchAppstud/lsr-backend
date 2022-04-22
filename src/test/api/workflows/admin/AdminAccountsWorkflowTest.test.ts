@@ -1,8 +1,3 @@
-import { Authority } from '../../../../main/domain/models/auth/Authority'
-import { AdminCreateAccountRequestPayload } from '../../../../main/web/http/api/v1/admin/accounts/requests/AdminCreateAccountRequest'
-import { AdminUpdateAccountRequestPayload } from '../../../../main/web/http/api/v1/admin/accounts/requests/AdminUpdateAccountRequest'
-import { HelpersAdminLogin } from '../../../helpers/admin/HelpersAdminLogin'
-import { HelpersAdminUser } from '../../../helpers/admin/HelpersAdminUser'
 import { TestHelpers } from '../../../TestHelpers'
 
 let testHelpers: TestHelpers
@@ -20,8 +15,8 @@ beforeEach(async () => {
 
 afterAll(async () => {
   await testHelpers.stop()
-})
-
+}) /*
+/*
 test('Admin users workflow', async () => {
   const adminInfos = {
     email: testHelpers.chance.email(),
@@ -35,7 +30,7 @@ test('Admin users workflow', async () => {
 
   /**
    * ADMIN CREATE USER
-   */
+   */ /*
   const createPayload: AdminCreateAccountRequestPayload = {
     email: testHelpers.chance.email(),
     password: testHelpers.chance.guid()
@@ -53,7 +48,7 @@ test('Admin users workflow', async () => {
 
   /**
    * ADMIN UPDATE USER
-   */
+   */ /*
   const updatePayload: AdminUpdateAccountRequestPayload = {
     email: testHelpers.chance.email()
   }
@@ -71,7 +66,7 @@ test('Admin users workflow', async () => {
 
   /**
    * ADMIN GET USER
-   */
+   */ /*
   const accountGet = await HelpersAdminUser.get({
     testHelpers: testHelpers,
     adminToken: adminToken.accessToken,
@@ -85,7 +80,7 @@ test('Admin users workflow', async () => {
 
   /**
    * ADMIN GET ALL USER
-   */
+   */ /*
   const accountGetAll = await HelpersAdminUser.getAll({
     testHelpers: testHelpers,
     adminToken: adminToken.accessToken
@@ -99,7 +94,7 @@ test('Admin users workflow', async () => {
 
   /**
    * ADMIN GET MANY USER
-   */
+   */ /*
   const accountGetMany = await HelpersAdminUser.getMany({
     testHelpers: testHelpers,
     adminToken: adminToken.accessToken,
@@ -112,3 +107,4 @@ test('Admin users workflow', async () => {
   expect(accountGetMany.content[0].createdDate).toBeDefined()
   expect(accountGetMany.content[0].updatedDate).toBeDefined()
 })
+*/

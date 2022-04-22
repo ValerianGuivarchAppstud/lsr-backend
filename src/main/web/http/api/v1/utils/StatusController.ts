@@ -1,6 +1,6 @@
 import { EnvVarVM, StatusVM } from './entities/StatusVM'
 import { GetStatusRequest, GetStatusRequestParams } from './requests/GetStatusRequest'
-import { IAccountProvider } from '../../../../../domain/providers/IAccountProvider'
+import { ICharacterProvider } from '../../../../../domain/providers/ICharacterProvider'
 import { HttpRequestMethod, IHttpGateway, IHttpRequest, IHttpResponse } from '../../../../../gateways/IHttpGateway'
 import { HttpRouteIdentifiers } from '../../../HttpRouteIdentifiers'
 import axios from 'axios'
@@ -8,11 +8,11 @@ import dayjs from 'dayjs'
 import { constants } from 'http2'
 
 export class StatusController {
-  private readonly accountProvider: IAccountProvider
+  private readonly characterProvider: ICharacterProvider
   private readonly managementSecret?: string
 
-  constructor(p: { httpGateway: IHttpGateway; managementSecret?: string; accountProvider: IAccountProvider }) {
-    this.accountProvider = p.accountProvider
+  constructor(p: { httpGateway: IHttpGateway; managementSecret?: string; characterProvider: ICharacterProvider }) {
+    this.characterProvider = p.characterProvider
     this.managementSecret = p.managementSecret
 
     p.httpGateway.addRoute({
@@ -65,7 +65,7 @@ export class StatusController {
 
   private async testDatabaseConnection(): Promise<boolean> {
     try {
-      await this.accountProvider.countAll()
+      await this.characterProvider.countAll()
       return true
     } catch (e) {
       return false

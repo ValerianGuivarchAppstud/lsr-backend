@@ -6,7 +6,7 @@ import { Account } from '../../models/account/Account'
 import { Profile } from '../../models/account/Profile'
 import { Authority } from '../../models/auth/Authority'
 import { IAccountProvider } from '../../providers/IAccountProvider'
-import { IProfileProvider } from '../../providers/IProfileProvider'
+import { IProfileProvider } from '../../../../../../lsr-backend/src/main/domain/providers/IProfileProvider'
 
 export class AdminAccountService {
   private readonly logger = logger(this.constructor.name)
