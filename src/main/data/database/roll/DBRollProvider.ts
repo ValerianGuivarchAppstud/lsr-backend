@@ -43,6 +43,7 @@ export class DBRollProvider implements IRollProvider {
   }
 
   async getLast(size: number): Promise<Roll[]> {
+
     const rollList = await DBRollModel.find().exec()
     return rollList
       .sort((r1, r2) => r1.date.getTime() - r2.date.getTime())
