@@ -10,6 +10,7 @@ import { Authority } from '../../../../../../domain/models/auth/Authority'
 import { AdminAccountService } from '../../../../../../domain/services/admin/AdminAccountService'
 import { HttpRequestMethod, IHttpGateway } from '../../../../../../gateways/IHttpGateway'
 import { HttpRouteIdentifiers } from '../../../../HttpRouteIdentifiers'
+import {AdminEnumRequest, AdminEnumRequestPayload} from '../auth/requests/AdminEnumsRequest'
 import { ReactAdminPage } from '../common/pagination/ReactAdminPage'
 
 export class AdminAccountController {
@@ -46,6 +47,16 @@ export class AdminAccountController {
       reqValidator: AdminGetOneAccountRequestSchema,
       resValidator: AdminUserVM.getValidationSchema(),
       bind: this.findOne.bind(this)
+    })
+
+    p.httpGateway.addRoute({
+      id: HttpRouteIdentifiers.ADMIN_GET_ENUM,
+      method: HttpRequestMethod.GET,
+      route: `/api/v1/admin/enums`,
+      useAuth: [Authority.ADMIN],
+      reqValidator: AdminEnumRequestPayload.getValidationSchema(),
+      resValidator: undefined,
+      bind: this.findEnums.bind(this)
     })
 
     p.httpGateway.addRoute({
@@ -99,6 +110,14 @@ export class AdminAccountController {
   async findOne(req: AdminGetOneAccountRequest): Promise<AdminUserVM> {
     const results = await this.accountService.findOneById(req.params.id)
     return AdminUserVM.from(results)
+  }
+
+  async findEnums(req: AdminEnumRequest): Promise<string[]> {
+    if(req.query.enum === 'authority') {
+      return Object.values(Authority)
+    } else {
+      return []
+    }
   }
 
   async many(req: AdminGetManyAccountsRequest): Promise<ReactAdminPage<AdminUserVM>> {

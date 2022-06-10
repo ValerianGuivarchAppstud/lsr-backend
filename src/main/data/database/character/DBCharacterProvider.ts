@@ -88,7 +88,7 @@ export class DBCharacterProvider implements ICharacterProvider {
       }
     ).exec()
     if (!newCharacter) {
-      throw ProviderErrors.EntityNotFound(Character.name)
+      throw ProviderErrors.EntityNotFound(character.name)
     }
     return DBCharacterProvider.toCharacter(newCharacter)
   }
@@ -97,7 +97,7 @@ export class DBCharacterProvider implements ICharacterProvider {
   async delete(name: string) {
     const character = await DBCharacterModel.findOneAndDelete({ name: name }).exec()
     if (!character) {
-      throw ProviderErrors.EntityNotFound(Character.name)
+      throw ProviderErrors.EntityNotFound(name)
     }
   }
 

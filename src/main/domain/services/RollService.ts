@@ -9,7 +9,7 @@ import { IRollProvider } from '../providers/IRollProvider'
 
 export class RollService {
   // eslint-disable-next-line no-magic-numbers
-  public static readonly MAX_ROLL_LIST_SIZE = 10
+  public static readonly MAX_ROLL_LIST_SIZE = 50
   // eslint-disable-next-line no-magic-numbers
   public static readonly CLASSIC_ROLL_VALUE = 6
   // eslint-disable-next-line no-magic-numbers
@@ -34,6 +34,14 @@ export class RollService {
 
   async getLast(): Promise<Roll[]> {
     return this.rollProvider.getLast(RollService.MAX_ROLL_LIST_SIZE)
+  }
+
+  updateToSend(): boolean {
+    return this.rollProvider.updateToSend()
+  }
+
+  updateSent() {
+    this.rollProvider.updateSent()
   }
 
   async roll(p: {

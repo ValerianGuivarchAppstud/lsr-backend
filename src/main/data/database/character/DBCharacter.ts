@@ -53,4 +53,4 @@ export const DBCharacterSchema = new Schema<DBCharacter, DBCharacterModelType<DB
 
 type DBCharacterModelType<T extends Document> = PaginateModel<T>
 
-export const DBCharacterModel = model<DBCharacter>('character', DBCharacterSchema) as DBCharacterModelType<DBCharacter>
+export const DBCharacterModel = model<DBCharacter>('characters', DBCharacterSchema) as DBCharacterModelType<DBCharacter>

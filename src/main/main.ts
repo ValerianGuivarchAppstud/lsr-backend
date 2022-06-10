@@ -80,7 +80,8 @@ export class BackendApplication {
     const http = new HttpGateway({
       httpPort: p.http.port,
       httpHost: p.http.host,
-      requestMaxSize: p.http.requestMaxSize
+      requestMaxSize: p.http.requestMaxSize,
+      rollService: rollService
     })
     new AdminAuthenticationController({
       httpGateway: http,

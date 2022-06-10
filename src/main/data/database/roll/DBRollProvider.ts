@@ -4,6 +4,7 @@ import { RollType } from '../../../domain/models/roll/RollType'
 import { IRollProvider } from '../../../domain/providers/IRollProvider'
 
 export class DBRollProvider implements IRollProvider {
+  _updateToSend = true
   private static toRoll(doc: DBRoll): Roll {
     return new Roll({
       id: doc._id,
@@ -39,15 +40,27 @@ export class DBRollProvider implements IRollProvider {
 
   // TODO job to remove olds roll ?
   async add(roll: Roll): Promise<Roll> {
-    return DBRollProvider.toRoll(await DBRollModel.create(DBRollProvider.fromRoll(roll)))
+    const newRoll = DBRollProvider.toRoll(await DBRollModel.create(DBRollProvider.fromRoll(roll)))
+    this._updateToSend = true
+    return newRoll
+  }
+
+  updateToSend(): boolean {
+    return this._updateToSend
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  updateSent() {
+    this._updateToSend = false
   }
 
   async getLast(size: number): Promise<Roll[]> {
-
     const rollList = await DBRollModel.find().exec()
-    return rollList
-      .sort((r1, r2) => r1.date.getTime() - r2.date.getTime())
-      .slice(rollList.length - size, rollList.length)
-      .map((roll) => DBRollProvider.toRoll(roll))
+    return (
+      rollList
+        .sort((r1, r2) => r2.date.getTime() - r1.date.getTime())
+        //.slice(rollList.length - size, rollList.length)
+        .slice(0, size)
+        .map((roll) => DBRollProvider.toRoll(roll))
+    )
   }
 }

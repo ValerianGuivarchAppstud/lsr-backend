@@ -2,6 +2,7 @@ import { HttpRouteIdentifiers } from './HttpRouteIdentifiers'
 import { ProviderErrors } from '../../data/errors/ProviderErrors'
 import { logger, logRequestWithBody } from '../../domain/helpers/logs/Logging'
 import { starWildcardMatch } from '../../domain/helpers/MatcherUtils'
+import { RollService } from '../../domain/services/RollService'
 import { HttpRequestMethod, HttpRoute, IHttpGateway, IHttpGatewayOptions } from '../../gateways/IHttpGateway'
 import fastify, {
   FastifyError,
@@ -13,8 +14,8 @@ import fastify, {
 } from 'fastify'
 import fastifyCors from 'fastify-cors'
 import fastifyMultipart from 'fastify-multipart'
+import { FastifySSEPlugin } from 'fastify-sse-v2'
 import fastifySwagger from 'fastify-swagger'
-import fastifyWebsocket from 'fastify-websocket'
 import HttpStatus from 'http-status-codes'
 import { IncomingHttpHeaders } from 'http'
 
@@ -26,54 +27,19 @@ export class HttpGateway implements IHttpGateway {
   private readonly httpPort: number
   private readonly httpHost: string
   private routes: HttpRoute[]
+  private static rollService: RollService
 
-  /*  private eventsHandler(req, reply) {
-    const headers = {
-      'Content-Type': 'text/event-stream',
-      Connection: 'keep-alive',
-      'Cache-Control': 'no-cache'
-    }
-    // eslint-disable-next-line no-magic-numbers
-    reply.raw.writeHead(200, headers)
-    reply.raw.write(JSON.stringify({ txt: new Date() }))
-
-    const clientId = req.id
-
-    const newClient = {
-      id: clientId,
-      response: reply
-    }
-    HttpGateway.clients.push(newClient)
-    HttpGateway.listenEvent()
-
-    req.raw.on('close', () => {
-      console.log(clientId + ' connection closed')
-      HttpGateway.clients = HttpGateway.clients.filter((client) => client.id !== clientId)
-    })
-  }
-
-  static listenEvent() {
-    const interval = setInterval(() => {
-      HttpGateway.clients.forEach((client) => {
-        client.response.raw.write(JSON.stringify({ txt: new Date() }))
-      })
-      if (HttpGateway.clients.length == 0) {
-        clearInterval(interval)
-      }
-      // eslint-disable-next-line no-magic-numbers
-    }, 1000)
-  }*/
-
-  constructor(p: { httpPort: number; httpHost: string; requestMaxSize: number }) {
+  constructor(p: { httpPort: number; httpHost: string; requestMaxSize: number; rollService: RollService }) {
     this.allowedOrigins = ['*'] // FIXME change this
     this.instance = fastify({
       logger: this.logger,
       bodyLimit: p.requestMaxSize
     })
-    this.instance.register(fastifyWebsocket)
+    this.instance.register(FastifySSEPlugin)
     this.httpPort = p.httpPort
     this.httpHost = p.httpHost
     this.routes = []
+    HttpGateway.rollService = p.rollService
     this.install()
   }
 
@@ -149,11 +115,30 @@ export class HttpGateway implements IHttpGateway {
   }
 
   async startWithOptions(options?: IHttpGatewayOptions): Promise<boolean> {
-    this.instance.get('/api/v1/sse', { websocket: true }, (connection /* SocketStream */, req /* FastifyRequest */) => {
-      connection.socket.on('message', (message) => {
-        // message.toString() === 'hi from client'
-        connection.socket.send('hi from server')
-      })
+    this.instance.get('/api/v1/sse', function (req, res) {
+      /*      res.sse(
+        (async function* source() {
+          async function delay(number: number) {
+            return new Promise((resolve) => setTimeout(resolve, number))
+          }
+
+          let i = 0
+          // eslint-disable-next-line no-magic-numbers
+          while (true) {
+            // eslint-disable-next-line no-magic-numbers
+            await delay(2000)
+            const updateToSend = HttpGateway.rollService.updateToSend()
+            if (updateToSend) {
+              const data = RollLastVM.from({
+                rollList: await HttpGateway.rollService.getLast()
+              })
+              i++
+              yield { id: String(i), data: JSON.stringify(data) }
+              HttpGateway.rollService.updateSent()
+            }
+          }
+        })()
+      )*/
     })
     if (this.instance.server.listening) {
       this.logger.warn('start > http server already started')
@@ -179,7 +164,7 @@ export class HttpGateway implements IHttpGateway {
 
     // eslint-disable-next-line no-process-env
     if (process.env.NODE_ENV !== 'production') {
-      this.instance.swagger()
+      // TODO this.instance.swagger()
       this.instance.log.info(
         `API Documentation available on https://${this.httpHost}:${this.httpPort}${this.swaggerUiUrl}/static/index.html`
       )

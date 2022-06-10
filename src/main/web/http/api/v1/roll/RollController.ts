@@ -4,8 +4,8 @@ import { RollGetLastRequest, RollGetLastRequestPayload } from './requests/RollGe
 import { RollSendRequest, RollSendRequestPayload } from './requests/RollSendRequest'
 import { RollService } from '../../../../../domain/services/RollService'
 import { HttpRequestMethod, IHttpGateway } from '../../../../../gateways/IHttpGateway'
+import { Subject } from '../../../../../utils/Observable'
 import { HttpRouteIdentifiers } from '../../../HttpRouteIdentifiers'
-import {Subject} from "../../../../../utils/Observable";
 
 export class RollController {
   private readonly rollService: RollService
