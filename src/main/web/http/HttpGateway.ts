@@ -115,8 +115,8 @@ export class HttpGateway implements IHttpGateway {
   }
 
   async startWithOptions(options?: IHttpGatewayOptions): Promise<boolean> {
-    this.instance.get('/api/v1/sse', function (req, res) {
-      /*      res.sse(
+    /*this.instance.get('/api/v1/sse', function (req, res) {
+            res.sse(
         (async function* source() {
           async function delay(number: number) {
             return new Promise((resolve) => setTimeout(resolve, number))
@@ -138,8 +138,8 @@ export class HttpGateway implements IHttpGateway {
             }
           }
         })()
-      )*/
-    })
+      )//
+    })*/
     if (this.instance.server.listening) {
       this.logger.warn('start > http server already started')
       return true
