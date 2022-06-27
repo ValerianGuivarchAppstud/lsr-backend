@@ -1,7 +1,6 @@
 import { ProviderErrors } from '../../data/errors/ProviderErrors'
 import { logger } from '../helpers/logs/Logging'
 import { Bloodline } from '../models/character/Bloodline'
-import { Character } from '../models/character/Character'
 import { Roll } from '../models/roll/Roll'
 import { RollType } from '../models/roll/RollType'
 import { ICharacterProvider } from '../providers/ICharacterProvider'
@@ -38,10 +37,6 @@ export class RollService {
 
   updateToSend(): boolean {
     return this.rollProvider.updateToSend()
-  }
-
-  updateSent() {
-    this.rollProvider.updateSent()
   }
 
   async roll(p: {

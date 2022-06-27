@@ -5,7 +5,7 @@ import { RollVM } from '../../roll/entities/RollVM'
 import S, { ObjectSchema } from 'fluent-json-schema'
 
 export class CharacterSheetVM {
-  character: Character
+  character: CharacterVM
   rollList: RollVM[]
 
   private constructor(p: CharacterSheetVM) {

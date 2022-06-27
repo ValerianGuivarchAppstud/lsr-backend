@@ -17,7 +17,7 @@
     "lint": "eslint --max-warnings 30 --ext .ts src/**",
     "sonar": "node sonarqube.analysis.js",
     "sonar:withtests": "npm run test && node sonarqube.analysis.js",
-    "start:local": "NODE_ENV=local ts-node src/main/start.ts",
+    "start:local": "NODE_ENV=local nodemon src/main/start.ts",
     "start:prod": "node dist/main/start.js",
     "test": "jest --no-cache --forceExit --coverage --testResultsProcessor=jest-sonar-reporter"
   },
