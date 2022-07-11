@@ -7,16 +7,21 @@ import S, { ObjectSchema } from 'fluent-json-schema'
 export class CharacterSheetVM {
   character: CharacterVM
   rollList: RollVM[]
+  pjAlliesNames: string[]
 
   private constructor(p: CharacterSheetVM) {
     this.character = p.character
     this.rollList = p.rollList
+    this.pjAlliesNames = p.pjAlliesNames
   }
 
-  static from(p: { character: Character; rollList: Roll[] }): CharacterSheetVM {
+  static from(p: { character: Character; rollList: Roll[]; pjAlliesNames: string[] }): CharacterSheetVM {
     return new CharacterSheetVM({
-      character: p.character,
-      rollList: p.rollList.map((roll) => RollVM.from({ roll: roll }))
+      character: CharacterVM.from({
+        character: p.character
+      }),
+      rollList: p.rollList.map((roll) => RollVM.from({ roll: roll })),
+      pjAlliesNames: p.pjAlliesNames
     })
   }
 
@@ -24,6 +29,7 @@ export class CharacterSheetVM {
     return S.object()
       .prop('character', CharacterVM.getFluentSchema())
       .prop('rollList', S.array().items(RollVM.getFluentSchema()))
+      .prop('pjAlliesNames', S.array().items(S.string()))
   }
 
   static getValidationSchema(): Record<string, unknown> {

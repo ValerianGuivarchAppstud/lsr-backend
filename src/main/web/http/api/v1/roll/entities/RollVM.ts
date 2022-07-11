@@ -13,6 +13,7 @@ export class RollVM {
   proficiency: boolean
   benediction: number
   malediction: number
+  characterToHelp?: string
   result: number[]
   success: number | null
 
@@ -27,6 +28,7 @@ export class RollVM {
     this.proficiency = p.proficiency
     this.benediction = p.benediction
     this.malediction = p.malediction
+    this.characterToHelp = p.characterToHelp
     this.result = p.result
     this.success = p.success
   }
@@ -43,6 +45,7 @@ export class RollVM {
       proficiency: p.roll.proficiency,
       benediction: p.roll.benediction,
       malediction: p.roll.malediction,
+      characterToHelp: p.roll.characterToHelp ?? undefined,
       result: p.roll.result,
       success: p.roll.success
     })
@@ -60,6 +63,7 @@ export class RollVM {
       .prop('proficiency', S.boolean().required())
       .prop('benediction', S.integer().required())
       .prop('malediction', S.integer().required())
+      .prop('characterToHelp', S.string())
       .prop('result', S.array().required())
       .prop('success', S.integer())
   }

@@ -75,11 +75,27 @@ export class ProviderErrors {
     })
   }
 
+  static RollNotEnoughRelance(): GenericError {
+    return GenericError.of({
+      statusCode: HttpStatus.METHOD_FAILURE,
+      message: 'Pas assez de relance !',
+      code: 'ROLL_NOT_ENOUGH_RELANCE'
+    })
+  }
+
   static RollWrongEmpiricalRequest(): GenericError {
     return GenericError.of({
       statusCode: HttpStatus.METHOD_FAILURE,
       message: 'Erreur dans la requête empirique',
       code: 'ROLL_WRONG_EMPIRICAL_REQUEST'
+    })
+  }
+
+  static RollNoPreviousRoll(): GenericError {
+    return GenericError.of({
+      statusCode: HttpStatus.METHOD_FAILURE,
+      message: 'Pas de lancer de dé à relancer',
+      code: 'ROLL_NO_PREVIOUS_ROLL'
     })
   }
 

@@ -53,7 +53,8 @@ export class RollController {
       proficiency: req.body.proficiency,
       benediction: req.body.benediction,
       malediction: req.body.malediction,
-      empiriqueRoll: req.body.empiriqueRoll
+      empiriqueRoll: req.body.empiriqueRoll,
+      characterToHelp: req.body.characterToHelp
     })
 
     RollController.subject.notify()

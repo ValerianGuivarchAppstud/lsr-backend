@@ -4,9 +4,12 @@ import { CharacterCreateRequest, CharacterCreateRequestPayload } from './request
 import { CharacterDeleteRequest, CharacterDeleteRequestPayload } from './requests/CharacterDeleteRequest'
 import { CharacterGetRequest, CharacterGetRequestPayload } from './requests/CharacterGetRequest'
 import { Bloodline } from '../../../../../domain/models/character/Bloodline'
+import { Category } from '../../../../../domain/models/character/Category'
 import { Character } from '../../../../../domain/models/character/Character'
 import { Classe } from '../../../../../domain/models/character/Classe'
+import { Genre } from '../../../../../domain/models/character/Genre'
 import { CharacterService } from '../../../../../domain/services/CharacterService'
+import { MjService } from '../../../../../domain/services/MjService'
 import { RollService } from '../../../../../domain/services/RollService'
 import { HttpRequestMethod, IHttpGateway } from '../../../../../gateways/IHttpGateway'
 import { HttpRouteIdentifiers } from '../../../HttpRouteIdentifiers'
@@ -14,10 +17,17 @@ import { HttpRouteIdentifiers } from '../../../HttpRouteIdentifiers'
 export class CharacterController {
   private readonly characterService: CharacterService
   private readonly rollService: RollService
+  private readonly mjService: MjService
 
-  constructor(p: { httpGateway: IHttpGateway; characterService: CharacterService; rollService: RollService }) {
+  constructor(p: {
+    httpGateway: IHttpGateway
+    characterService: CharacterService
+    rollService: RollService
+    mjService: MjService
+  }) {
     this.characterService = p.characterService
     this.rollService = p.rollService
+    this.mjService = p.mjService
 
     p.httpGateway.addRoute({
       id: HttpRouteIdentifiers.CHARACTER_GET,
@@ -53,9 +63,11 @@ export class CharacterController {
   async get(req: CharacterGetRequest): Promise<CharacterSheetVM> {
     const character = await this.characterService.findByName(req.query.name)
     const lastRolls = await this.rollService.getLast()
+    const session = await this.mjService.getSession()
     return CharacterSheetVM.from({
       character: character,
-      rollList: lastRolls
+      rollList: lastRolls,
+      pjAlliesNames: session.characters
     })
   }
 
@@ -81,8 +93,12 @@ export class CharacterController {
       umbra: req.body.character.umbra,
       secunda: req.body.character.secunda,
       notes: req.body.character.notes,
-      category: req.body.character.category,
-      genreMasculin: req.body.character.genreMasculin
+      category: Category[req.body.character.category],
+      genre: Genre[req.body.character.genre],
+      relance: req.body.character.relance,
+      playerName: req.body.character.playerName,
+      picture: req.body.character.picture,
+      background: req.body.character.background
     })
     const character = await this.characterService.createOrUpdateCharacter({ character: newCharacter })
     return CharacterVM.from({

@@ -13,6 +13,8 @@ export interface DBRoll extends Document {
   malediction: number
   result: number[]
   success: number | null
+  characterToHelp?: string
+  helpUsed: boolean | null
 }
 
 export const DBRollSchema = new Schema<DBRoll, DBRollModelType<DBRoll>>({
@@ -26,7 +28,9 @@ export const DBRollSchema = new Schema<DBRoll, DBRollModelType<DBRoll>>({
   benediction: { type: Number, required: true },
   malediction: { type: Number, required: true },
   result: { type: [Number], required: true },
-  success: { type: Number, required: false }
+  success: { type: Number, required: false },
+  characterToHelp: { type: String, required: false },
+  helpUsed: { type: Boolean, required: false }
 }).plugin(mongoosePaginate)
 
 type DBRollModelType<T extends Document> = PaginateModel<T>

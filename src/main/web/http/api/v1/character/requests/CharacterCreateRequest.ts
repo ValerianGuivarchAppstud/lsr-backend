@@ -1,7 +1,7 @@
 import { Character } from '../../../../../../domain/models/character/Character'
 import { IHttpRequest } from '../../../../../../gateways/IHttpGateway'
+import { CharacterVM } from '../entities/CharacterVM'
 import S, { ObjectSchema } from 'fluent-json-schema'
-import {CharacterVM} from "../entities/CharacterVM";
 
 export type CharacterCreateRequest = IHttpRequest<{
   Body: CharacterCreateRequestPayload

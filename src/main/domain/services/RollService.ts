@@ -35,10 +35,6 @@ export class RollService {
     return this.rollProvider.getLast(RollService.MAX_ROLL_LIST_SIZE)
   }
 
-  updateToSend(): boolean {
-    return this.rollProvider.updateToSend()
-  }
-
   async roll(p: {
     rollerName: string
     rollType: RollType
@@ -49,8 +45,39 @@ export class RollService {
     benediction: number
     malediction: number
     empiriqueRoll?: string
+    characterToHelp?: string
   }): Promise<Roll> {
     const character = await this.characterProvider.findByName(p.rollerName)
+    if (p.rollType === RollType.RELANCE) {
+      const lastRoll = await this.rollProvider.getLastForCharacter(character)
+      if (lastRoll === undefined) {
+        throw ProviderErrors.RollNoPreviousRoll()
+      } else if (character.relance <= 0) {
+        throw ProviderErrors.RollNotEnoughRelance()
+      }
+      lastRoll.date = new Date()
+      lastRoll.success =
+        (lastRoll.success ?? 0) -
+        lastRoll.result.filter((r) => r === RollService.ONE_SUCCESS_DICE).length * RollService.ONE_SUCCESS_EFFECT -
+        lastRoll.result.filter((r) => r === RollService.TWO_SUCCESS_DICE).length * RollService.TWO_SUCCESS_EFFECT
+
+      const diceNumber = lastRoll.result.length
+      lastRoll.result = []
+      for (let i = 0; i < diceNumber; i++) {
+        const dice = RollService.randomIntFromInterval(1, RollService.CLASSIC_ROLL_VALUE)
+        if (dice === RollService.ONE_SUCCESS_DICE) {
+          lastRoll.success = (lastRoll.success ?? 0) + RollService.ONE_SUCCESS_EFFECT
+        }
+        if (dice === RollService.TWO_SUCCESS_DICE) {
+          // eslint-disable-next-line no-magic-numbers
+          lastRoll.success = (lastRoll.success ?? 0) + RollService.TWO_SUCCESS_EFFECT
+        }
+        lastRoll.result.push(dice)
+      }
+      character.relance = character.relance - 1
+      this.characterProvider.createOrUpdate(character)
+      return await this.rollProvider.update(lastRoll)
+    }
     let diceNumber = 0
     let diceValue = 0
     let diceValueDelta = p.benediction - p.malediction
@@ -63,6 +90,33 @@ export class RollService {
     let useProficiency = p.proficiency
     const result: number[] = []
     let successToCalculate = true
+    const availableHelp = await this.rollProvider.availableHelp(p.rollerName)
+    let helpCanBeUsed = false
+    if (
+      p.rollType === RollType.SOIN ||
+      p.rollType === RollType.MAGIE_FORTE ||
+      p.rollType === RollType.MAGIE_LEGERE ||
+      p.rollType === RollType.ESPRIT ||
+      p.rollType === RollType.ARCANE_ESPRIT ||
+      p.rollType === RollType.ESSENCE ||
+      p.rollType === RollType.ARCANE_ESSENCE ||
+      p.rollType === RollType.CHAIR
+    ) {
+      helpCanBeUsed = true
+      for (const help of availableHelp) {
+        if (!help.helpUsed) {
+          if (help.success === 0) {
+            diceValueDelta--
+          } else {
+            diceValueDelta = diceValueDelta + (help.success ?? 0)
+          }
+        }
+      }
+    }
+
+    if (usePf) {
+      diceValueDelta++
+    }
     if (p.rollType === RollType.CHAIR) {
       diceNumber = character.chair + diceValueDelta
       diceValue = RollService.CLASSIC_ROLL_VALUE
@@ -93,8 +147,8 @@ export class RollService {
     } else if (p.rollType === RollType.MAGIE_LEGERE) {
       diceNumber = character.essence + diceValueDelta
       diceValue = RollService.CLASSIC_ROLL_VALUE
-      ppDelta--
       usePp = false
+      ppDelta--
     } else if (p.rollType === RollType.MAGIE_FORTE) {
       diceNumber = character.essence + diceValueDelta
       diceValue = RollService.CLASSIC_ROLL_VALUE
@@ -102,12 +156,11 @@ export class RollService {
     } else if (p.rollType === RollType.SOIN && character.bloodline !== Bloodline.LUMIERE) {
       diceNumber = character.essence + diceValueDelta
       diceValue = RollService.CLASSIC_ROLL_VALUE
-      usePp = true
+      dettesDelta++
     } else if (p.rollType === RollType.SOIN && character.bloodline === Bloodline.LUMIERE) {
       diceNumber = character.essence + diceValueDelta
       diceValue = RollService.CLASSIC_ROLL_VALUE
       ppDelta--
-      usePp = false
     } else if (p.rollType === RollType.EMPIRIQUE) {
       try {
         diceNumber = Number(p.empiriqueRoll?.substring(0, p.empiriqueRoll.indexOf('d')))
@@ -127,17 +180,19 @@ export class RollService {
       useProficiency = false
       successToCalculate = false
     }
-
     if (usePf) {
-      diceValueDelta++
       pfDelta--
+    }
+    if (usePp) {
+      ppDelta--
+      dettesDelta++
     }
     let success: number | null = null
     if (successToCalculate) {
       success = 0
     }
     for (let i = 0; i < diceNumber; i++) {
-      const dice = this.randomIntFromInterval(1, diceValue)
+      const dice = RollService.randomIntFromInterval(1, diceValue)
       if (successToCalculate) {
         if (dice === RollService.ONE_SUCCESS_DICE) {
           success = (success ?? 0) + RollService.ONE_SUCCESS_EFFECT
@@ -156,13 +211,17 @@ export class RollService {
       success = (success ?? 0) + 1
     }
 
-    if (character.pf - pfDelta < 0) {
+    if (character.pf + pfDelta < 0) {
       throw ProviderErrors.RollNotEnoughPf()
-    } else if (character.pp - ppDelta < 0) {
+    } else if (character.pp + ppDelta < 0) {
       throw ProviderErrors.RollNotEnoughPp()
-    } else if (character.arcanes - arcaneDelta < 0) {
+    } else if (character.arcanes + arcaneDelta < 0) {
       throw ProviderErrors.RollNotEnoughArcane()
     } else {
+      let helpUsed: boolean | null = null
+      if (p.characterToHelp) {
+        helpUsed = false
+      }
       const rollToCreate = new Roll({
         rollerName: p.rollerName,
         rollType: p.rollType,
@@ -174,7 +233,9 @@ export class RollService {
         benediction: p.benediction,
         malediction: p.malediction,
         result: result,
-        success: success
+        success: success,
+        characterToHelp: p.characterToHelp,
+        helpUsed: helpUsed
       })
       const createdRoll = this.rollProvider.add(rollToCreate)
       character.pf += pfDelta
@@ -182,11 +243,14 @@ export class RollService {
       character.arcanes += arcaneDelta
       character.dettes += dettesDelta
       this.characterProvider.createOrUpdate(character)
+      if (helpCanBeUsed) {
+        this.rollProvider.helpUsed(availableHelp)
+      }
       return createdRoll
     }
   }
 
-  private randomIntFromInterval(min, max) {
+  private static randomIntFromInterval(min, max) {
     // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min)
   }

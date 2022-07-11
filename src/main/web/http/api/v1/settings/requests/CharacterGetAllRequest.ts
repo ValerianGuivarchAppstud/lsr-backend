@@ -1,21 +1,21 @@
 import { IHttpRequest } from '../../../../../../gateways/IHttpGateway'
 import S, { ObjectSchema } from 'fluent-json-schema'
 
-export type CharacterGetRequest = IHttpRequest<{
-  Querystring: CharacterGetRequestPayload
+export type CharacterGetSettingsRequest = IHttpRequest<{
+  Querystring: CharacterGetSettingsRequestPayload
 }>
 
-export class CharacterGetRequestPayload {
-  name: string
+export class CharacterGetSettingsRequestPayload {
+  playerName?: string
 
   static getFluentSchema(): ObjectSchema {
-    return S.object().prop('name', S.string().minLength(1))
+    return S.object().prop('playerName', S.string().minLength(1))
   }
 
   static getValidationSchema(): Record<string, unknown> {
     return {
       ...this.getFluentSchema().valueOf(),
-      description: 'CharacterGetRequest',
+      description: 'CharacterGetSettingsRequest',
       tags: ['Character']
     }
   }

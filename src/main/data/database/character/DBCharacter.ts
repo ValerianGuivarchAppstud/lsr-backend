@@ -23,7 +23,11 @@ export interface DBCharacter extends Document {
   secunda: string
   notes: string
   category: string
-  genreMasculin: boolean
+  genre: string
+  relance: number
+  playerName?: string
+  picture?: string
+  background?: string
 }
 
 export const DBCharacterSchema = new Schema<DBCharacter, DBCharacterModelType<DBCharacter>>({
@@ -48,7 +52,11 @@ export const DBCharacterSchema = new Schema<DBCharacter, DBCharacterModelType<DB
   secunda: { type: String, required: true },
   notes: { type: String, required: true },
   category: { type: String, required: true },
-  genreMasculin: { type: Boolean, required: true }
+  genre: { type: String, required: true },
+  relance: { type: Number, required: true },
+  playerName: { type: String, required: false },
+  picture: { type: String, required: false },
+  background: { type: String, required: false }
 }).plugin(mongoosePaginate)
 
 type DBCharacterModelType<T extends Document> = PaginateModel<T>
