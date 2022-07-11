@@ -249,7 +249,7 @@ export class HttpError {
   message: string
   stack?: string
   stacktrace?: string[]
-  validation?: string[]
+  validation?: (string | undefined)[]
   req?: { url: string; method: string; headers: IncomingHttpHeaders }
 
   constructor(p: { error: FastifyError; request: FastifyRequest }) {

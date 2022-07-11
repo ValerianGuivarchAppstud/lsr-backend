@@ -15,7 +15,9 @@ export class CharacterSheetVM {
 
   static from(p: { character: Character; rollList: Roll[] }): CharacterSheetVM {
     return new CharacterSheetVM({
-      character: p.character,
+      character: CharacterVM.from({
+        character: p.character
+      }),
       rollList: p.rollList.map((roll) => RollVM.from({ roll: roll }))
     })
   }

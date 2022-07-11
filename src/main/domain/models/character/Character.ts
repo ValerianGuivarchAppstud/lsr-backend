@@ -1,5 +1,7 @@
-import {Classe} from "./Classe";
-import {Bloodline} from "./Bloodline";
+import { Bloodline } from './Bloodline'
+import { Category } from './Category'
+import { Classe } from './Classe'
+import { Genre } from './Genre'
 
 export class Character {
   name: string
@@ -22,8 +24,12 @@ export class Character {
   umbra: string
   secunda: string
   notes: string
-  category: string
-  genreMasculin: boolean
+  category: Category
+  genre: Genre
+  relance: number
+  playerName?: string
+  picture?: string
+  background?: string
 
   constructor(p: {
     pp: number
@@ -47,11 +53,15 @@ export class Character {
     umbra: string
     category: string
     pvMax: number
-    genreMasculin: boolean
+    genre: string
+    relance: number
+    playerName?: string
+    picture?: string
+    background?: string
   }) {
     this.name = p.name ?? ''
     this.classe = Classe[p.classe] ?? Classe.CHAMPION
-    this.bloodline = Bloodline[p.bloodline] ?? Bloodline.FEU
+    this.bloodline = Bloodline[p.bloodline] ?? Bloodline.AUCUN
     this.chair = p.chair ?? 0
     this.esprit = p.esprit ?? 0
     this.essence = p.essence ?? 0
@@ -69,7 +79,11 @@ export class Character {
     this.umbra = p.umbra ?? ''
     this.secunda = p.secunda ?? ''
     this.notes = p.notes ?? ''
-    this.category = p.category ?? ''
-    this.genreMasculin = p.genreMasculin ?? true
+    this.category = Category[p.category] ?? Category.PNJ
+    this.genre = Genre[p.genre] ?? Genre.AUTRE
+    this.relance = p.relance ?? 0
+    this.playerName = p.playerName
+    this.picture = p.picture
+    this.background = p.background
   }
 }

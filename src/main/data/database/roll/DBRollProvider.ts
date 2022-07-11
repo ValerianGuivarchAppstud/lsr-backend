@@ -1,4 +1,5 @@
 import { DBRoll, DBRollModel } from './DBRoll'
+import { Character } from '../../../domain/models/character/Character'
 import { Roll } from '../../../domain/models/roll/Roll'
 import { RollType } from '../../../domain/models/roll/RollType'
 import { IRollProvider } from '../../../domain/providers/IRollProvider'
@@ -45,6 +46,13 @@ export class DBRollProvider implements IRollProvider {
     return newRoll
   }
 
+  // TODO job to remove olds roll ?
+  async update(roll: Roll): Promise<Roll> {
+    const newRoll = DBRollProvider.toRoll(await DBRollModel.replaceOne({ _id: roll.id }, DBRollProvider.fromRoll(roll)))
+    this._updateToSend = true
+    return newRoll
+  }
+
   updateToSend(): boolean {
     return this._updateToSend
   }
@@ -62,5 +70,24 @@ export class DBRollProvider implements IRollProvider {
         .slice(0, size)
         .map((roll) => DBRollProvider.toRoll(roll))
     )
+  }
+
+  async getLastForCharacter(character: Character): Promise<Roll | undefined> {
+    const rollList = await DBRollModel.find().exec()
+    return rollList
+      .sort((r1, r2) => r2.date.getTime() - r1.date.getTime())
+      .map((roll) => DBRollProvider.toRoll(roll))
+      .filter(
+        (roll) =>
+          roll.rollerName === character.name &&
+          (roll.rollType === RollType.CHAIR ||
+            roll.rollType === RollType.ESPRIT ||
+            roll.rollType === RollType.ESSENCE ||
+            roll.rollType === RollType.ARCANE_ESPRIT ||
+            roll.rollType === RollType.ARCANE_ESSENCE ||
+            roll.rollType === RollType.MAGIE_LEGERE ||
+            roll.rollType === RollType.MAGIE_FORTE ||
+            roll.rollType === RollType.SOIN)
+      )[0]
   }
 }

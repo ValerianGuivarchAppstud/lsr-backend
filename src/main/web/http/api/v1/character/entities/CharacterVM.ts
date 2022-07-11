@@ -1,6 +1,8 @@
+import { Bloodline } from '../../../../../../domain/models/character/Bloodline'
+import { Category } from '../../../../../../domain/models/character/Category'
 import { Character } from '../../../../../../domain/models/character/Character'
 import { Classe } from '../../../../../../domain/models/character/Classe'
-import { Bloodline } from '../../../../../../domain/models/character/Bloodline'
+import { Genre } from '../../../../../../domain/models/character/Genre'
 import S, { ObjectSchema } from 'fluent-json-schema'
 
 export class CharacterVM {
@@ -24,8 +26,12 @@ export class CharacterVM {
   umbra: string
   secunda: string
   notes: string
-  category: string
-  genreMasculin: boolean
+  category: Category
+  genre: Genre
+  relance: number
+  playerName?: string
+  picture?: string
+  background?: string
 
   private constructor(p: CharacterVM) {
     this.name = p.name
@@ -49,7 +55,11 @@ export class CharacterVM {
     this.secunda = p.secunda
     this.notes = p.notes
     this.category = p.category
-    this.genreMasculin = p.genreMasculin
+    this.genre = p.genre
+    this.relance = p.relance
+    this.playerName = p.playerName
+    this.picture = p.picture
+    this.background = p.background
   }
 
   static from(p: { character: Character }): CharacterVM {
@@ -75,7 +85,11 @@ export class CharacterVM {
       secunda: p.character.secunda,
       notes: p.character.notes,
       category: p.character.category,
-      genreMasculin: p.character.genreMasculin
+      genre: p.character.genre,
+      relance: p.character.relance,
+      playerName: p.character.playerName,
+      picture: p.character.picture,
+      background: p.character.background
     })
   }
 
@@ -102,7 +116,11 @@ export class CharacterVM {
       .prop('secunda', S.string().required())
       .prop('notes', S.string().required())
       .prop('category', S.string().required())
-      .prop('genreMasculin', S.boolean().required())
+      .prop('genre', S.string().required())
+      .prop('relance', S.integer().required())
+      .prop('playerName', S.string())
+      .prop('picture', S.string())
+      .prop('background', S.string())
   }
 
   static getValidationSchema(): Record<string, unknown> {

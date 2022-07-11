@@ -35,6 +35,18 @@ export enum HttpRouteIdentifiers {
   CHARACTER_DELETE = 'CHARACTER_DELETE',
 
   /**
+   * MJ
+   */
+  MJ_GET = 'MJ_GET',
+  MJ_ADD_CHARACTER = 'MJ_ADD_CHARACTER',
+  MJ_REMOVE_CHARACTER = 'MJ_REMOVE_CHARACTER',
+
+  /**
+   * SETTINGS
+   */
+  SETTINGS_GET = 'SETTINGS_GET',
+
+  /**
    * ROLL
    */
   ROLL_POST = 'ROLL_POST',
