@@ -27,8 +27,8 @@ export class RollService {
   private readonly logger = logger(this.constructor.name)
 
   constructor(p: { rollProvider: IRollProvider; characterProvider: ICharacterProvider }) {
-    this.rollProvider = p.rollProvider
     this.characterProvider = p.characterProvider
+    this.rollProvider = p.rollProvider
   }
 
   async getLast(): Promise<Roll[]> {
