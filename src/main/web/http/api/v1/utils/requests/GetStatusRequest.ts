@@ -1,7 +1,5 @@
 import { IHttpRequest } from '../../../../../../gateways/IHttpGateway'
 import S, { ObjectSchema } from 'fluent-json-schema'
-import {Account} from "../../../../../../domain/models/account/Account";
-
 
 export type GetStatusRequest = IHttpRequest<{
   Querystring: GetStatusRequestParams
@@ -9,7 +7,6 @@ export type GetStatusRequest = IHttpRequest<{
 
 export class GetStatusRequestParams {
   managementSecret?: string
-  accountId: string
 
   static getFluentSchema(): ObjectSchema {
     return S.object().prop('managementSecret', S.string())

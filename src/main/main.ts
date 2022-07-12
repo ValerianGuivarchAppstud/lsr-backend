@@ -1,25 +1,14 @@
 import { BackendApplicationParams } from './config/BackendApplicationParams'
-import { DBAccountProvider } from './data/database/account/DBAccountProvider'
 import { DBCharacterProvider } from './data/database/character/DBCharacterProvider'
 import { DBMjProvider } from './data/database/mj/DBMjProvider'
 import { MongoGateway } from './data/database/MongoGateway'
-import { DBProfileProvider } from './data/database/profile/DBProfileProvider'
 import { DBRollProvider } from './data/database/roll/DBRollProvider'
-import { EmailAuthProvider } from './data/security/EmailAuthProvider'
-import { JwtTokenProvider } from './data/security/JwtTokenProvider'
 import { logger } from './domain/helpers/logs/Logging'
-import { AccountService } from './domain/services/AccountService'
-import { AdminAccountService } from './domain/services/admin/AdminAccountService'
-import { AuthenticationService } from './domain/services/AuthenticationService'
 import { CharacterService } from './domain/services/CharacterService'
 import { MjService } from './domain/services/MjService'
 import { RollService } from './domain/services/RollService'
 import { IHttpGateway, IHttpGatewayOptions } from './gateways/IHttpGateway'
 import { IMongoGateway } from './gateways/IMongoGateway'
-import { AccountController } from './web/http/api/v1/account/AccountController'
-import { AdminAccountController } from './web/http/api/v1/admin/accounts/AdminAccountController'
-import { AdminAuthenticationController } from './web/http/api/v1/admin/auth/AuthenticationController'
-import { AuthenticationController } from './web/http/api/v1/auth/AuthenticationController'
 import { CharacterController } from './web/http/api/v1/character/CharacterController'
 import { MjController } from './web/http/api/v1/mj/MjController'
 import { RollController } from './web/http/api/v1/roll/RollController'
@@ -44,10 +33,6 @@ export class BackendApplication {
     /**
      * PROVIDERS
      */
-    const accountProvider = new DBAccountProvider()
-    const profileProvider = new DBProfileProvider()
-    const tokenProvider = new JwtTokenProvider({ jwtSecret: p.jwt.secret })
-    const emailAuthProvider = new EmailAuthProvider(accountProvider)
     const characterProvider = new DBCharacterProvider()
     const mjProvider = new DBMjProvider()
     const rollProvider = new DBRollProvider()
@@ -55,22 +40,6 @@ export class BackendApplication {
     /**
      * SERVICES
      */
-    const authenticationService = new AuthenticationService({
-      accountProvider: accountProvider,
-      profileProvider: profileProvider,
-      tokenProvider: tokenProvider,
-      authProviders: [emailAuthProvider]
-    })
-
-    const accountService = new AccountService({
-      accountProvider: accountProvider,
-      profileProvider: profileProvider
-    })
-
-    const adminAccountService = new AdminAccountService({
-      accountProvider: accountProvider,
-      profileProvider: profileProvider
-    })
     const characterService = new CharacterService({
       characterProvider: characterProvider
     })
@@ -92,14 +61,6 @@ export class BackendApplication {
       requestMaxSize: p.http.requestMaxSize,
       rollService: rollService
     })
-    new AdminAuthenticationController({
-      httpGateway: http,
-      authenticationService: authenticationService,
-      enabledRegisterEndpoint: true
-    })
-    new AdminAccountController({ httpGateway: http, accountService: adminAccountService })
-    new AuthenticationController({ httpGateway: http, service: authenticationService })
-    new AccountController({ httpGateway: http, accountService: accountService })
     new CharacterController({
       httpGateway: http,
       characterService: characterService,

@@ -20,7 +20,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ${{ secrets.DOCKER_HUB_REGISTRY }}/appstud-swag-backend-node
+          images: ${{ secrets.DOCKER_HUB_REGISTRY }}/vguivarch-ls7-backend-node
           tags: |
             production
             ${{ env.CUSTOM_TAG }}
