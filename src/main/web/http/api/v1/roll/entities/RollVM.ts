@@ -14,6 +14,8 @@ export class RollVM {
   benediction: number
   malediction: number
   characterToHelp?: string
+  picture?: string
+  resistRollList: RollVM[]
   result: number[]
   success: number | null
 
@@ -29,11 +31,13 @@ export class RollVM {
     this.benediction = p.benediction
     this.malediction = p.malediction
     this.characterToHelp = p.characterToHelp
+    this.resistRollList = p.resistRollList
     this.result = p.result
     this.success = p.success
+    this.picture = p.picture
   }
 
-  static from(p: { roll: Roll }): RollVM {
+  static from(p: { roll: Roll; rollList: Roll[] }): RollVM {
     return new RollVM({
       id: p.roll.id,
       rollerName: p.roll.rollerName,
@@ -46,6 +50,11 @@ export class RollVM {
       benediction: p.roll.benediction,
       malediction: p.roll.malediction,
       characterToHelp: p.roll.characterToHelp ?? undefined,
+      picture: p.roll.picture,
+      resistRollList:
+        p.rollList
+          .filter((resistRoll) => p.roll.id.toString() === resistRoll.resistRoll)
+          .map((roll) => RollVM.from({ roll: roll, rollList: [] })) ?? [],
       result: p.roll.result,
       success: p.roll.success
     })
@@ -63,7 +72,9 @@ export class RollVM {
       .prop('proficiency', S.boolean().required())
       .prop('benediction', S.integer().required())
       .prop('malediction', S.integer().required())
+      .prop('picture', S.string())
       .prop('characterToHelp', S.string())
+      .prop('resistRollList', S.array().items(S.string()))
       .prop('result', S.array().required())
       .prop('success', S.integer())
   }

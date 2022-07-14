@@ -10,6 +10,7 @@ import { RollService } from './domain/services/RollService'
 import { IHttpGateway, IHttpGatewayOptions } from './gateways/IHttpGateway'
 import { IMongoGateway } from './gateways/IMongoGateway'
 import { CharacterController } from './web/http/api/v1/character/CharacterController'
+import { HealController } from './web/http/api/v1/heal/HealController'
 import { MjController } from './web/http/api/v1/mj/MjController'
 import { RollController } from './web/http/api/v1/roll/RollController'
 import { SettingsController } from './web/http/api/v1/settings/SettingsController'
@@ -62,6 +63,12 @@ export class BackendApplication {
       rollService: rollService
     })
     new CharacterController({
+      httpGateway: http,
+      characterService: characterService,
+      rollService: rollService,
+      mjService: mjService
+    })
+    new HealController({
       httpGateway: http,
       characterService: characterService,
       rollService: rollService,

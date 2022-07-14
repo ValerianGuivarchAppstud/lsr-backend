@@ -1,29 +1,29 @@
-import { CharacterVM } from './CharacterVM'
 import { Character } from '../../../../../../domain/models/character/Character'
 import { Roll } from '../../../../../../domain/models/roll/Roll'
+import { CharacterVM } from '../../character/entities/CharacterVM'
 import { RollVM } from '../../roll/entities/RollVM'
 import S, { ObjectSchema } from 'fluent-json-schema'
 
-export class CharacterSheetVM {
+export class HealSheetVM {
   character: CharacterVM
   rollList: RollVM[]
-  pjAlliesNames: string[]
+  pjAllies: CharacterVM[]
 
-  private constructor(p: CharacterSheetVM) {
+  private constructor(p: HealSheetVM) {
     this.character = p.character
     this.rollList = p.rollList
-    this.pjAlliesNames = p.pjAlliesNames
+    this.pjAllies = p.pjAllies
   }
 
-  static from(p: { character: Character; rollList: Roll[]; pjAlliesNames: string[] }): CharacterSheetVM {
-    return new CharacterSheetVM({
+  static from(p: { character: Character; rollList: Roll[]; pjAllies: Character[] }): HealSheetVM {
+    return new HealSheetVM({
       character: CharacterVM.from({
         character: p.character
       }),
       rollList: p.rollList
         .filter((roll) => roll.resistRoll === '')
         .map((roll) => RollVM.from({ roll: roll, rollList: p.rollList })),
-      pjAlliesNames: p.pjAlliesNames
+      pjAllies: p.pjAllies.map((character) => CharacterVM.from({ character: character }))
     })
   }
 
@@ -31,10 +31,10 @@ export class CharacterSheetVM {
     return S.object()
       .prop('character', CharacterVM.getFluentSchema())
       .prop('rollList', S.array().items(RollVM.getFluentSchema()))
-      .prop('pjAlliesNames', S.array().items(S.string()))
+      .prop('pjAllies', S.array().items(CharacterVM.getFluentSchema()))
   }
 
   static getValidationSchema(): Record<string, unknown> {
-    return { ...this.getFluentSchema(), description: CharacterSheetVM.name }
+    return { ...this.getFluentSchema(), description: HealSheetVM.name }
   }
 }

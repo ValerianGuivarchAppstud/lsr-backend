@@ -46,6 +46,7 @@ export class RollService {
     malediction: number
     empiriqueRoll?: string
     characterToHelp?: string
+    resistRoll?: string
   }): Promise<Roll> {
     const character = await this.characterProvider.findByName(p.rollerName)
     if (p.rollType === RollType.RELANCE) {
@@ -157,6 +158,7 @@ export class RollService {
       diceNumber = character.essence + diceValueDelta
       diceValue = RollService.CLASSIC_ROLL_VALUE
       dettesDelta++
+      ppDelta--
     } else if (p.rollType === RollType.SOIN && character.bloodline === Bloodline.LUMIERE) {
       diceNumber = character.essence + diceValueDelta
       diceValue = RollService.CLASSIC_ROLL_VALUE
@@ -211,6 +213,13 @@ export class RollService {
       success = (success ?? 0) + 1
     }
 
+    if (p.rollType === RollType.SOIN) {
+      if (character.bloodline !== Bloodline.LUMIERE) {
+        // eslint-disable-next-line no-magic-numbers
+        success = (1 + (success ?? 0)) / 2
+      }
+      success = (success ?? 0) + 1
+    }
     if (character.pf + pfDelta < 0) {
       throw ProviderErrors.RollNotEnoughPf()
     } else if (character.pp + ppDelta < 0) {
@@ -235,7 +244,9 @@ export class RollService {
         result: result,
         success: success,
         characterToHelp: p.characterToHelp,
-        helpUsed: helpUsed
+        resistRoll: p.resistRoll,
+        helpUsed: helpUsed,
+        picture: character.picture // TODO update bdd si on change image
       })
       const createdRoll = this.rollProvider.add(rollToCreate)
       character.pf += pfDelta

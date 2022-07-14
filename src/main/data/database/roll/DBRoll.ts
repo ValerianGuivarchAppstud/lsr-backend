@@ -14,6 +14,8 @@ export interface DBRoll extends Document {
   result: number[]
   success: number | null
   characterToHelp?: string
+  picture?: string
+  resistRoll?: string
   helpUsed: boolean | null
 }
 
@@ -30,6 +32,8 @@ export const DBRollSchema = new Schema<DBRoll, DBRollModelType<DBRoll>>({
   result: { type: [Number], required: true },
   success: { type: Number, required: false },
   characterToHelp: { type: String, required: false },
+  picture: { type: String, required: false },
+  resistRoll: { type: String, required: false },
   helpUsed: { type: Boolean, required: false }
 }).plugin(mongoosePaginate)
 

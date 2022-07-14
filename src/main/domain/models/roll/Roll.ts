@@ -14,6 +14,8 @@ export class Roll {
   result: number[]
   success: number | null
   characterToHelp?: string
+  resistRoll?: string
+  picture?: string
   helpUsed: boolean | null
 
   constructor(p: {
@@ -30,6 +32,8 @@ export class Roll {
     result: number[]
     success: number | null
     characterToHelp?: string
+    resistRoll?: string
+    picture?: string
     helpUsed: boolean | null
   }) {
     this.id = p.id ?? 'no_id'
@@ -46,5 +50,7 @@ export class Roll {
     this.success = p.success ?? null
     this.characterToHelp = p.characterToHelp
     this.helpUsed = p.helpUsed
+    this.picture = p.picture
+    this.resistRoll = p.resistRoll
   }
 }

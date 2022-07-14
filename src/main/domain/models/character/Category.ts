@@ -1,5 +1,5 @@
 export enum Category {
-  PJ,
-  PNJ,
-  TEMPO
+  PJ = 'PJ',
+  PNJ = 'PNJ',
+  TEMPO = 'TEMPO'
 }

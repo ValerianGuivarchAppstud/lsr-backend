@@ -20,6 +20,8 @@ export class DBRollProvider implements IRollProvider {
       result: doc.result,
       success: doc.success,
       characterToHelp: doc.characterToHelp,
+      picture: doc.picture,
+      resistRoll: doc.resistRoll,
       helpUsed: doc.helpUsed
     })
   }
@@ -38,20 +40,20 @@ export class DBRollProvider implements IRollProvider {
       result: doc.result,
       success: doc.success,
       helpUsed: doc.helpUsed,
-      characterToHelp: doc.characterToHelp
+      characterToHelp: doc.characterToHelp,
+      picture: doc.picture,
+      resistRoll: doc.resistRoll
     } as DBRoll
   }
 
   // TODO job to remove olds roll ?
   async add(roll: Roll): Promise<Roll> {
-    const newRoll = DBRollProvider.toRoll(await DBRollModel.create(DBRollProvider.fromRoll(roll)))
-    return newRoll
+    return DBRollProvider.toRoll(await DBRollModel.create(DBRollProvider.fromRoll(roll)))
   }
 
   // TODO job to remove olds roll ?
   async update(roll: Roll): Promise<Roll> {
-    const newRoll = DBRollProvider.toRoll(await DBRollModel.replaceOne({ _id: roll.id }, DBRollProvider.fromRoll(roll)))
-    return newRoll
+    return DBRollProvider.toRoll(await DBRollModel.replaceOne({ _id: roll.id }, DBRollProvider.fromRoll(roll)))
   }
 
   async getLast(size: number): Promise<Roll[]> {

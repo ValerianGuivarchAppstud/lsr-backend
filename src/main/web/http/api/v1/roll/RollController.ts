@@ -54,12 +54,14 @@ export class RollController {
       benediction: req.body.benediction,
       malediction: req.body.malediction,
       empiriqueRoll: req.body.empiriqueRoll,
-      characterToHelp: req.body.characterToHelp
+      characterToHelp: req.body.characterToHelp,
+      resistRoll: req.body.resistRoll
     })
 
     RollController.subject.notify()
     return RollVM.from({
-      roll: roll
+      roll: roll,
+      rollList: []
     })
   }
 }

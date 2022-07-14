@@ -11,7 +11,14 @@ export class RollLastVM {
 
   static from(p: { rollList: Roll[] }): RollLastVM {
     return new RollLastVM({
-      rollList: p.rollList.map((roll) => RollVM.from({ roll: roll }))
+      rollList: p.rollList
+        .filter((resistRoll) => resistRoll.resistRoll === '')
+        .map((roll) =>
+          RollVM.from({
+            roll: roll,
+            rollList: p.rollList
+          })
+        )
     })
   }
 

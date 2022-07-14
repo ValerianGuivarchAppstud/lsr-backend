@@ -37,7 +37,9 @@ export class MjSheetVM {
       pnjNames: p.pnjNames,
       tempoNames: p.tempoNames,
       playersName: p.playersName,
-      rollList: p.rollList.map((roll) => RollVM.from({ roll: roll }))
+      rollList: p.rollList
+        .filter((roll) => roll.resistRoll === '')
+        .map((roll) => RollVM.from({ roll: roll, rollList: p.rollList }))
     })
   }
 

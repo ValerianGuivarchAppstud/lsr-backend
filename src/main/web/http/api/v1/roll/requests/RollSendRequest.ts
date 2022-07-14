@@ -16,7 +16,9 @@ export class RollSendRequestPayload {
   benediction: number
   malediction: number
   characterToHelp?: string
+  picture?: string
   empiriqueRoll?: string
+  resistRoll?: string
 
   static getFluentSchema(): ObjectSchema {
     return S.object()
@@ -30,6 +32,8 @@ export class RollSendRequestPayload {
       .prop('malediction', S.integer().required())
       .prop('empiriqueRoll', S.string())
       .prop('characterToHelp', S.string())
+      .prop('picture', S.string())
+      .prop('resistRoll', S.string())
   }
 
   static getValidationSchema(): Record<string, unknown> {
