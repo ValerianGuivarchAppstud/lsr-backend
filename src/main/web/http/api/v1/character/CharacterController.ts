@@ -73,6 +73,7 @@ export class CharacterController {
 
   async createOrUpdate(req: CharacterCreateRequest): Promise<CharacterVM> {
     const newCharacter = new Character({
+      // TODO majuscule juste à la 1er lettre ?
       name: req.body.character.name,
       classe: Classe[req.body.character.classe],
       bloodline: Bloodline[req.body.character.bloodline],

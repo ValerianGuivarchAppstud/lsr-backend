@@ -90,6 +90,11 @@ export class DBCharacterProvider implements ICharacterProvider {
     return DBCharacterProvider.toCharacter(character)
   }
 
+  async exist(name: string): Promise<boolean> {
+    const character = await DBCharacterModel.findOne({ name: name }).exec()
+    return character != null
+  }
+
   async findManyByName(names: string[]): Promise<Character[]> {
     const characters = await DBCharacterModel.find({ name: names }).exec()
     return characters.map((c) => DBCharacterProvider.toCharacter(c))

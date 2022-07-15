@@ -79,7 +79,7 @@ export class Character {
     this.umbra = p.umbra ?? ''
     this.secunda = p.secunda ?? ''
     this.notes = p.notes ?? ''
-    this.category = Category[p.category] ?? Category.PNJ
+    this.category = Category[p.category] ?? Category.TEMPO
     this.genre = Genre[p.genre] ?? Genre.AUTRE
     this.relance = p.relance ?? 0
     this.playerName = p.playerName

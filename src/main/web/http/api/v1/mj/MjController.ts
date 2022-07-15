@@ -1,4 +1,9 @@
 import { MjSheetVM } from './entities/MjSheetVM'
+import {
+  MjAddCharacterFromTemplateRequest,
+  MjAddCharacterFromTemplateRequestPayload
+} from './requests/MjAddCharacterFromTemplateRequest'
+import { MjAddCharacterFromTemplateResponse } from './requests/MjAddCharacterFromTemplateResponse'
 import { MjAddCharacterRequest, MjAddCharacterRequestPayload } from './requests/MjAddCharacterRequest'
 import { MjRemoveCharacterRequest, MjRemoveCharacterRequestPayload } from './requests/MjRemoveCharacterRequest'
 import { Category } from '../../../../../domain/models/character/Category'
@@ -52,6 +57,16 @@ export class MjController {
       resValidator: MjSheetVM.getValidationSchema(),
       bind: this.removeCharacter.bind(this)
     })
+
+    p.httpGateway.addRoute({
+      id: HttpRouteIdentifiers.MJ_TEMPLATE,
+      method: HttpRequestMethod.PUT,
+      route: `/api/v1/mj/template`,
+      useAuth: [],
+      reqValidator: MjAddCharacterFromTemplateRequestPayload.getValidationSchema(),
+      resValidator: MjAddCharacterFromTemplateResponse.getValidationSchema(),
+      bind: this.template.bind(this)
+    })
   }
 
   async get(): Promise<MjSheetVM> {
@@ -59,8 +74,11 @@ export class MjController {
     const characters = await this.characterService.findManyByName(mj.characters)
     const lastRolls = await this.rollService.getLast()
     const pjNames = (await this.characterService.findAllByCategory(Category.PJ)).sort()
-    const pnjNames = (await this.characterService.findAllByCategory(Category.PNJ)).sort()
+    const pnjNames = await this.characterService.findAllByCategory(Category.PNJ_ALLY)
+    pnjNames.push(...(await this.characterService.findAllByCategory(Category.PNJ_ENNEMY)))
+    pnjNames.sort()
     const tempoNames = (await this.characterService.findAllByCategory(Category.TEMPO)).sort()
+    const templateNames = (await this.characterService.findAllByCategory(Category.TEMPLATE)).sort()
     const playersName = await this.characterService.getPlayersName()
     return MjSheetVM.from({
       mj: mj,
@@ -68,6 +86,7 @@ export class MjController {
       pjNames: pjNames,
       pnjNames: pnjNames,
       tempoNames: tempoNames,
+      templateNames: templateNames,
       playersName: playersName,
       rollList: lastRolls
     })
@@ -76,6 +95,18 @@ export class MjController {
   async addCharacter(req: MjAddCharacterRequest): Promise<MjSheetVM> {
     await this.mjService.addCharacter(req.query.characterName)
     return this.get()
+  }
+
+  async template(req: MjAddCharacterFromTemplateRequest): Promise<MjAddCharacterFromTemplateResponse> {
+    const templateNewCharacters = await this.mjService.addCharactersFromTemplate(
+      req.body.templateName,
+      req.body.customName,
+      req.body.level,
+      req.body.number
+    )
+    return new MjAddCharacterFromTemplateResponse({
+      templateNewCharacters: templateNewCharacters
+    })
   }
 
   async removeCharacter(req: MjRemoveCharacterRequest): Promise<MjSheetVM> {

@@ -44,6 +44,7 @@ export enum HttpRouteIdentifiers {
   MJ_GET = 'MJ_GET',
   MJ_ADD_CHARACTER = 'MJ_ADD_CHARACTER',
   MJ_REMOVE_CHARACTER = 'MJ_REMOVE_CHARACTER',
+  MJ_TEMPLATE = 'MJ_TEMPLATE',
 
   /**
    * SETTINGS

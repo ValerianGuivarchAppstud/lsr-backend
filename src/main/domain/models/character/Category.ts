@@ -1,5 +1,7 @@
 export enum Category {
   PJ = 'PJ',
-  PNJ = 'PNJ',
-  TEMPO = 'TEMPO'
+  PNJ_ALLY = 'PNJ_ALLY',
+  PNJ_ENNEMY = 'PNJ_ENNEMY',
+  TEMPO = 'TEMPO',
+  TEMPLATE = 'TEMPLATE'
 }
