@@ -16,15 +16,17 @@ export class CharacterSheetVM {
   }
 
   static from(p: { character: Character; rollList: Roll[]; pjAlliesNames: string[] }): CharacterSheetVM {
-    return new CharacterSheetVM({
+    const t2 = p.rollList
+      .filter((roll) => roll.resistRoll === '')
+      .map((roll) => RollVM.from({ roll: roll, rollList: p.rollList }))
+    const r = new CharacterSheetVM({
       character: CharacterVM.from({
         character: p.character
       }),
-      rollList: p.rollList
-        .filter((roll) => roll.resistRoll === '')
-        .map((roll) => RollVM.from({ roll: roll, rollList: p.rollList })),
+      rollList: t2,
       pjAlliesNames: p.pjAlliesNames
     })
+    return r
   }
 
   static getFluentSchema(): ObjectSchema {

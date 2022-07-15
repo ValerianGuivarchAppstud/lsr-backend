@@ -38,7 +38,7 @@ export class RollVM {
   }
 
   static from(p: { roll: Roll; rollList: Roll[] }): RollVM {
-    return new RollVM({
+    const r = new RollVM({
       id: p.roll.id,
       rollerName: p.roll.rollerName,
       rollType: p.roll.rollType,
@@ -58,6 +58,7 @@ export class RollVM {
       result: p.roll.result,
       success: p.roll.success
     })
+    return r
   }
 
   static getFluentSchema(): ObjectSchema {
@@ -74,7 +75,7 @@ export class RollVM {
       .prop('malediction', S.integer().required())
       .prop('picture', S.string())
       .prop('characterToHelp', S.string())
-      .prop('resistRollList', S.array().items(S.string()))
+      .prop('resistRollList')
       .prop('result', S.array().required())
       .prop('success', S.integer())
   }

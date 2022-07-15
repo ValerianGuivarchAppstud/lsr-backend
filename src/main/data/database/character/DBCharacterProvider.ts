@@ -85,7 +85,7 @@ export class DBCharacterProvider implements ICharacterProvider {
   async findByName(name: string): Promise<Character> {
     const character = await DBCharacterModel.findOne({ name: name }).exec()
     if (!character) {
-      throw ProviderErrors.EntityNotFound(Character.name)
+      throw ProviderErrors.EntityNotFound(name)
     }
     return DBCharacterProvider.toCharacter(character)
   }
