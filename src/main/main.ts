@@ -81,7 +81,7 @@ export class BackendApplication {
       rollService: rollService
     })
     new RollController({ httpGateway: http, rollService: rollService })
-    new SettingsController({ httpGateway: http, characterService: characterService })
+    new SettingsController({ httpGateway: http, characterService: characterService, mjService: mjService })
     new StatusController({
       httpGateway: http,
       characterProvider: characterProvider,

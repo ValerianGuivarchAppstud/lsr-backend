@@ -216,7 +216,7 @@ export class RollService {
     if (p.rollType === RollType.SOIN) {
       if (character.bloodline !== Bloodline.LUMIERE) {
         // eslint-disable-next-line no-magic-numbers
-        success = (1 + (success ?? 0)) / 2
+        success = Math.floor((1 + (success ?? 0)) / 2)
       }
       success = (success ?? 0) + 1
     }

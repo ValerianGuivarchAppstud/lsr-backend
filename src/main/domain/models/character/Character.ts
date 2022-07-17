@@ -30,6 +30,8 @@ export class Character {
   playerName?: string
   picture?: string
   background?: string
+  buttonColor?: string
+  textColor?: string
 
   constructor(p: {
     pp: number
@@ -58,6 +60,8 @@ export class Character {
     playerName?: string
     picture?: string
     background?: string
+    buttonColor?: string
+    textColor?: string
   }) {
     this.name = p.name ?? ''
     this.classe = Classe[p.classe] ?? Classe.CHAMPION
@@ -85,5 +89,7 @@ export class Character {
     this.playerName = p.playerName
     this.picture = p.picture
     this.background = p.background
+    this.buttonColor = p.buttonColor
+    this.textColor = p.textColor
   }
 }

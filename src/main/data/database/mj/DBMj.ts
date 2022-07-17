@@ -3,10 +3,12 @@ import mongoosePaginate from 'mongoose-paginate-v2'
 
 export interface DBMj extends Document {
   characters: string[]
+  visioToken: string
 }
 
 export const DBMjSchema = new Schema<DBMj, DBMjModelType<DBMj>>({
-  characters: [{ type: String, required: true }]
+  characters: [{ type: String, required: true }],
+  visioToken: { type: String, required: true }
 }).plugin(mongoosePaginate)
 
 type DBMjModelType<T extends Document> = PaginateModel<T>

@@ -36,7 +36,9 @@ export class DBCharacterProvider implements ICharacterProvider {
       relance: doc.relance,
       playerName: doc.playerName,
       picture: doc.picture,
-      background: doc.background
+      background: doc.background,
+      buttonColor: doc.buttonColor,
+      textColor: doc.textColor
     })
   }
 
@@ -67,7 +69,9 @@ export class DBCharacterProvider implements ICharacterProvider {
       relance: doc.relance,
       playerName: doc.playerName,
       picture: doc.picture,
-      background: doc.background
+      background: doc.background,
+      buttonColor: doc.buttonColor,
+      textColor: doc.textColor
     } as DBCharacter
   }
 

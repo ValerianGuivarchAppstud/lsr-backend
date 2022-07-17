@@ -28,6 +28,8 @@ export interface DBCharacter extends Document {
   playerName?: string
   picture?: string
   background?: string
+  buttonColor?: string
+  textColor?: string
 }
 
 export const DBCharacterSchema = new Schema<DBCharacter, DBCharacterModelType<DBCharacter>>({
@@ -56,7 +58,9 @@ export const DBCharacterSchema = new Schema<DBCharacter, DBCharacterModelType<DB
   relance: { type: Number, required: true },
   playerName: { type: String, required: false },
   picture: { type: String, required: false },
-  background: { type: String, required: false }
+  background: { type: String, required: false },
+  buttonColor: { type: String, required: false },
+  textColor: { type: String, required: false }
 }).plugin(mongoosePaginate)
 
 type DBCharacterModelType<T extends Document> = PaginateModel<T>

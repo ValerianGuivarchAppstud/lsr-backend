@@ -99,7 +99,9 @@ export class CharacterController {
       relance: req.body.character.relance,
       playerName: req.body.character.playerName,
       picture: req.body.character.picture,
-      background: req.body.character.background
+      background: req.body.character.background,
+      buttonColor: req.body.character.buttonColor,
+      textColor: req.body.character.textColor
     })
     const character = await this.characterService.createOrUpdateCharacter({ character: newCharacter })
     return CharacterVM.from({
