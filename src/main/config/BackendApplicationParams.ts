@@ -15,6 +15,11 @@ export class BackendApplicationParams {
   management: {
     secret?: string
   }
+  agora: {
+    agoraAppId: string
+    agoraVisioChannel: string
+    agoraAppCertificate: string
+  }
 
   constructor(p: Partial<BackendApplicationParams>) {
     let httpPort = 8080
@@ -40,6 +45,11 @@ export class BackendApplicationParams {
     }
     this.management = {
       secret: p.management?.secret ?? process.env.MANAGEMENT_SECRET
+    }
+    this.agora = {
+      agoraAppId: p.agora?.agoraAppId ?? process.env.AGORA_APP_ID ?? '',
+      agoraVisioChannel: p.agora?.agoraVisioChannel ?? process.env.AGORA_VISIO_CHANNEL ?? '',
+      agoraAppCertificate: p.agora?.agoraAppCertificate ?? process.env.AGORA_APP_CERTIFICATE ?? ''
     }
   }
 }

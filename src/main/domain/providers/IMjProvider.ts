@@ -4,4 +4,5 @@ export interface IMjProvider {
   getSessionCharacter(): Promise<Session>
   addCharacter(characterName: string): Promise<boolean>
   removeCharacter(characterName: string): Promise<boolean>
+  updateVisioToken(visioToken: string): Promise<boolean>
 }

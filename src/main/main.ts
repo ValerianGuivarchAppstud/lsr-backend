@@ -1,4 +1,5 @@
 import { BackendApplicationParams } from './config/BackendApplicationParams'
+import { AgoraVisioProvider } from './data/agora/VisioProvider'
 import { DBCharacterProvider } from './data/database/character/DBCharacterProvider'
 import { DBMjProvider } from './data/database/mj/DBMjProvider'
 import { MongoGateway } from './data/database/MongoGateway'
@@ -9,6 +10,7 @@ import { MjService } from './domain/services/MjService'
 import { RollService } from './domain/services/RollService'
 import { IHttpGateway, IHttpGatewayOptions } from './gateways/IHttpGateway'
 import { IMongoGateway } from './gateways/IMongoGateway'
+import { AgoraJob } from './jobs/AgoraJob'
 import { CharacterController } from './web/http/api/v1/character/CharacterController'
 import { HealController } from './web/http/api/v1/heal/HealController'
 import { MjController } from './web/http/api/v1/mj/MjController'
@@ -35,6 +37,11 @@ export class BackendApplication {
      * PROVIDERS
      */
     const characterProvider = new DBCharacterProvider()
+    const visioProvider = new AgoraVisioProvider({
+      appId: p.agora.agoraAppId,
+      visioChannel: p.agora.agoraVisioChannel,
+      appCertificate: p.agora.agoraAppCertificate
+    })
     const mjProvider = new DBMjProvider()
     const rollProvider = new DBRollProvider()
 
@@ -92,6 +99,19 @@ export class BackendApplication {
       databaseGateway: database,
       httpGateway: http
     })
+
+    /**
+     * JOBS
+     */
+    const agoraJob = new AgoraJob({
+      visioProvider: visioProvider,
+      mjProvider: mjProvider
+    })
+
+    /**
+     * Jobs Initialisation
+     */
+    agoraJob.start()
     return this.dependencies
   }
 
