@@ -20,7 +20,13 @@ export class MjService {
   }
 
   async getSession(): Promise<Session> {
-    return await this.mjProvider.getSessionCharacter()
+    const session = await this.mjProvider.getSessionCharacter()
+    for (const cName of session.characters) {
+      if (!(await this.characterProvider.exist(cName))) {
+        await this.mjProvider.removeCharacter(cName)
+      }
+    }
+    return session
   }
 
   async addCharacter(characterName: string): Promise<boolean> {

@@ -11,6 +11,7 @@ import { RollService } from './domain/services/RollService'
 import { IHttpGateway, IHttpGatewayOptions } from './gateways/IHttpGateway'
 import { IMongoGateway } from './gateways/IMongoGateway'
 import { AgoraJob } from './jobs/AgoraJob'
+import { CharacterJob } from './jobs/CharactersJob'
 import { CharacterController } from './web/http/api/v1/character/CharacterController'
 import { HealController } from './web/http/api/v1/heal/HealController'
 import { MjController } from './web/http/api/v1/mj/MjController'
@@ -107,11 +108,16 @@ export class BackendApplication {
       visioProvider: visioProvider,
       mjProvider: mjProvider
     })
+    const characterJob = new CharacterJob({
+      characterProvider: characterProvider
+    })
 
     /**
      * Jobs Initialisation
      */
     agoraJob.start()
+    characterJob.start()
+
     return this.dependencies
   }
 

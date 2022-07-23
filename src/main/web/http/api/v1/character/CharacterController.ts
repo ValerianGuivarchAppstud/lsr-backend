@@ -64,10 +64,12 @@ export class CharacterController {
     const character = await this.characterService.findByName(req.query.name)
     const lastRolls = await this.rollService.getLast()
     const session = await this.mjService.getSession()
+    const playersName = await this.characterService.getPlayersName()
     return CharacterSheetVM.from({
       character: character,
       rollList: lastRolls,
-      pjAlliesNames: session.characters
+      pjAlliesNames: session.characters,
+      playersName: playersName
     })
   }
 

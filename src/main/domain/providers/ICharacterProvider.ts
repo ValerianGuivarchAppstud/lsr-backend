@@ -10,5 +10,4 @@ export interface ICharacterProvider {
   findAll(playerName?: string): Promise<Character[]>
   countAll(): Promise<number>
   findAllByCategory(category: Category): Promise<string[]>
-  getPlayersName(): Promise<string[]>
 }

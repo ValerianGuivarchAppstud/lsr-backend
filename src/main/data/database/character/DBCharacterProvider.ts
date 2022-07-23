@@ -5,7 +5,6 @@ import { Character } from '../../../domain/models/character/Character'
 import { Classe } from '../../../domain/models/character/Classe'
 import { Genre } from '../../../domain/models/character/Genre'
 import { ICharacterProvider } from '../../../domain/providers/ICharacterProvider'
-import { Utils } from '../../../utils/Utils'
 import { ProviderErrors } from '../../errors/ProviderErrors'
 
 export class DBCharacterProvider implements ICharacterProvider {
@@ -112,11 +111,6 @@ export class DBCharacterProvider implements ICharacterProvider {
       const characterList = await DBCharacterModel.find().exec()
       return characterList.map((c) => DBCharacterProvider.toCharacter(c))
     }
-  }
-
-  async getPlayersName(): Promise<string[]> {
-    const characterList = await DBCharacterModel.find({}).exec()
-    return Utils.uniqByReduce(characterList.map((c) => c.playerName).filter((p) => p !== undefined) as string[]).sort()
   }
 
   async findAllByCategory(category: Category): Promise<string[]> {

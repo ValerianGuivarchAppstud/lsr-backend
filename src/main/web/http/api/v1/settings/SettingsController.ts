@@ -3,7 +3,6 @@ import { CharacterGetSettingsRequest, CharacterGetSettingsRequestPayload } from 
 import { CharacterService } from '../../../../../domain/services/CharacterService'
 import { MjService } from '../../../../../domain/services/MjService'
 import { HttpRequestMethod, IHttpGateway } from '../../../../../gateways/IHttpGateway'
-import { Utils } from '../../../../../utils/Utils'
 import { HttpRouteIdentifiers } from '../../../HttpRouteIdentifiers'
 
 export class SettingsController {
@@ -36,12 +35,7 @@ export class SettingsController {
   }
 
   async getSettings(req: CharacterGetSettingsRequest): Promise<SettingsVM> {
-    const playerListName = (await this.characterService.findAll('MJ')) // TODO clean this
-      .map((c) => c.playerName)
-      .filter((p) => p !== undefined)
-    let playerListResult: string[] = []
-    playerListResult.push('')
-    playerListResult = Utils.uniqByReduce(playerListResult.concat(playerListName as string[])).sort()
+    const playersName = await this.characterService.getPlayersName()
 
     const characterListName = (await this.characterService.findAll(req.query.playerName)).map((c) => c.name)
     let characterListResult: string[] = []
@@ -49,7 +43,7 @@ export class SettingsController {
     characterListResult = characterListResult.concat(characterListName).sort()
 
     return SettingsVM.from({
-      playersName: playerListResult,
+      playersName: playersName,
       charactersName: characterListResult
     })
   }

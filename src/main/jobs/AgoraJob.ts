@@ -17,7 +17,8 @@ export class AgoraJob {
     const rule = new RecurrenceRule()
     // running job every two minutes
     // eslint-disable-next-line no-magic-numbers
-    rule.hour = 22
+    rule.hour = 6
+    rule.minute = 0
 
     scheduleJob(rule, async () => {
       this.logger.info('AgoraTokenJob > start')
@@ -25,7 +26,7 @@ export class AgoraJob {
       const token = this.visioProvider.generateToken()
       await this.mjProvider.updateVisioToken(token)
 
-      this.logger.info('AwsJob > stop')
+      this.logger.info('AgoraTokenJob > stop')
     })
   }
 }

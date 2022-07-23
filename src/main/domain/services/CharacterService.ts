@@ -42,6 +42,6 @@ export class CharacterService {
   }
 
   async getPlayersName(): Promise<string[]> {
-    return this.characterProvider.getPlayersName()
+    return ['', 'Arcady', 'David', 'Elena', 'Eric', 'Florent', 'Guilhem', 'Jupi', 'Nico', 'Tom', 'Valou', 'Guest']
   }
 }
