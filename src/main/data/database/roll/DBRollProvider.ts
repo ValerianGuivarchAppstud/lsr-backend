@@ -21,6 +21,9 @@ export class DBRollProvider implements IRollProvider {
       success: doc.success,
       characterToHelp: doc.characterToHelp,
       picture: doc.picture,
+      data: doc.data,
+      empirique: doc.empirique,
+      apotheose: doc.apotheose,
       resistRoll: doc.resistRoll,
       helpUsed: doc.helpUsed
     })
@@ -42,16 +45,17 @@ export class DBRollProvider implements IRollProvider {
       helpUsed: doc.helpUsed,
       characterToHelp: doc.characterToHelp,
       picture: doc.picture,
+      data: doc.data,
+      empirique: doc.empirique,
+      apotheose: doc.apotheose,
       resistRoll: doc.resistRoll
     } as DBRoll
   }
 
-  // TODO job to remove olds roll ?
   async add(roll: Roll): Promise<Roll> {
     return DBRollProvider.toRoll(await DBRollModel.create(DBRollProvider.fromRoll(roll)))
   }
 
-  // TODO job to remove olds roll ?
   async update(roll: Roll): Promise<Roll> {
     return DBRollProvider.toRoll(await DBRollModel.replaceOne({ _id: roll.id }, DBRollProvider.fromRoll(roll)))
   }
@@ -65,6 +69,11 @@ export class DBRollProvider implements IRollProvider {
         .slice(0, size)
         .map((roll) => DBRollProvider.toRoll(roll))
     )
+  }
+
+  async deleteAll(): Promise<boolean> {
+    await DBRollModel.deleteMany({})
+    return true
   }
 
   async getLastForCharacter(character: Character): Promise<Roll | undefined> {

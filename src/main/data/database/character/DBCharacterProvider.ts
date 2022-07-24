@@ -1,4 +1,5 @@
 import { DBCharacter, DBCharacterModel } from './DBCharacter'
+import { Apotheose } from '../../../domain/models/character/Apotheose'
 import { Bloodline } from '../../../domain/models/character/Bloodline'
 import { Category } from '../../../domain/models/character/Category'
 import { Character } from '../../../domain/models/character/Character'
@@ -13,6 +14,9 @@ export class DBCharacterProvider implements ICharacterProvider {
       name: doc.name,
       classe: Classe[doc.classe],
       bloodline: Bloodline[doc.bloodline],
+      apotheose: Apotheose[doc.apotheose],
+      apotheoseImprovement: doc.apotheoseImprovement,
+      apotheoseImprovementList: doc.apotheoseImprovementList,
       chair: doc.chair,
       esprit: doc.esprit,
       essence: doc.essence,
@@ -35,6 +39,7 @@ export class DBCharacterProvider implements ICharacterProvider {
       relance: doc.relance,
       playerName: doc.playerName,
       picture: doc.picture,
+      pictureApotheose: doc.pictureApotheose,
       background: doc.background,
       buttonColor: doc.buttonColor,
       textColor: doc.textColor
@@ -46,6 +51,9 @@ export class DBCharacterProvider implements ICharacterProvider {
       name: doc.name,
       classe: doc.classe.toString(),
       bloodline: doc.bloodline.toString(),
+      apotheose: doc.apotheose.toString(),
+      apotheoseImprovement: doc.apotheoseImprovement,
+      apotheoseImprovementList: doc.apotheoseImprovementList,
       chair: doc.chair,
       esprit: doc.esprit,
       essence: doc.essence,
@@ -68,6 +76,7 @@ export class DBCharacterProvider implements ICharacterProvider {
       relance: doc.relance,
       playerName: doc.playerName,
       picture: doc.picture,
+      pictureApotheose: doc.pictureApotheose,
       background: doc.background,
       buttonColor: doc.buttonColor,
       textColor: doc.textColor
@@ -75,6 +84,14 @@ export class DBCharacterProvider implements ICharacterProvider {
   }
 
   async createOrUpdate(newCharacter: Character): Promise<Character> {
+    if (
+      newCharacter.apotheoseImprovement &&
+      newCharacter.apotheoseImprovement !== '(Ajouter)' &&
+      newCharacter.apotheoseImprovement !== 'Aucune' &&
+      !newCharacter.apotheoseImprovementList.includes(newCharacter.apotheoseImprovement)
+    ) {
+      newCharacter.apotheoseImprovementList.push(newCharacter.apotheoseImprovement)
+    }
     const character = await DBCharacterModel.findOne({ name: newCharacter.name }).exec()
     if (!character) {
       return DBCharacterProvider.toCharacter(

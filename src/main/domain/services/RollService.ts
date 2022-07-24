@@ -1,6 +1,8 @@
 import { ProviderErrors } from '../../data/errors/ProviderErrors'
 import { logger } from '../helpers/logs/Logging'
+import { Apotheose } from '../models/character/Apotheose'
 import { Bloodline } from '../models/character/Bloodline'
+import { Classe } from '../models/character/Classe'
 import { Roll } from '../models/roll/Roll'
 import { RollType } from '../models/roll/RollType'
 import { ICharacterProvider } from '../providers/ICharacterProvider'
@@ -21,6 +23,8 @@ export class RollService {
   public static readonly TWO_SUCCESS_DICE = 6
   // eslint-disable-next-line no-magic-numbers
   public static readonly TWO_SUCCESS_EFFECT = 2
+  // eslint-disable-next-line no-magic-numbers
+  public static readonly PACIFICATEUR_CONSEQUENCE = 10
 
   private rollProvider: IRollProvider
   private characterProvider: ICharacterProvider
@@ -44,7 +48,7 @@ export class RollService {
     proficiency: boolean
     benediction: number
     malediction: number
-    empiriqueRoll?: string
+    empirique?: string
     characterToHelp?: string
     resistRoll?: string
   }): Promise<Roll> {
@@ -93,6 +97,8 @@ export class RollService {
     let successToCalculate = true
     const availableHelp = await this.rollProvider.availableHelp(p.rollerName)
     let helpCanBeUsed = false
+    let data = ''
+    let secret = p.secret
     if (
       p.rollType === RollType.SOIN ||
       p.rollType === RollType.MAGIE_FORTE ||
@@ -112,6 +118,26 @@ export class RollService {
             diceValueDelta = diceValueDelta + (help.success ?? 0)
           }
         }
+      }
+    }
+    if (p.rollType === RollType.APOTHEOSE) {
+      secret = true
+    }
+    if (
+      character.apotheose != Apotheose.NONE &&
+      (p.rollType === RollType.SOIN ||
+        p.rollType === RollType.MAGIE_FORTE ||
+        p.rollType === RollType.MAGIE_LEGERE ||
+        p.rollType === RollType.ESPRIT ||
+        p.rollType === RollType.ESSENCE ||
+        p.rollType === RollType.CHAIR)
+    ) {
+      if (character.apotheose == Apotheose.FINALE) {
+        // eslint-disable-next-line no-magic-numbers
+        diceValueDelta = diceValueDelta + 5
+      } else {
+        // eslint-disable-next-line no-magic-numbers
+        diceValueDelta = diceValueDelta + 3
       }
     }
 
@@ -165,8 +191,19 @@ export class RollService {
       ppDelta--
     } else if (p.rollType === RollType.EMPIRIQUE) {
       try {
-        diceNumber = Number(p.empiriqueRoll?.substring(0, p.empiriqueRoll.indexOf('d')))
-        diceValue = Number(p.empiriqueRoll?.substring(p.empiriqueRoll.indexOf('d') + 1))
+        diceNumber = Number(p.empirique?.substring(0, p.empirique.indexOf('d')))
+        diceValue = Number(p.empirique?.substring(p.empirique.indexOf('d') + 1))
+        usePf = false
+        usePp = false
+        useProficiency = false
+        successToCalculate = false
+      } catch (e) {
+        throw ProviderErrors.RollWrongEmpiricalRequest()
+      }
+    } else if (p.rollType === RollType.APOTHEOSE) {
+      try {
+        diceNumber = 1
+        diceValue = RollService.CLASSIC_ROLL_VALUE
         usePf = false
         usePp = false
         useProficiency = false
@@ -231,11 +268,46 @@ export class RollService {
       if (p.characterToHelp) {
         helpUsed = false
       }
+
+      if (character.classe === Classe.PACIFICATEUR && p.rollType === RollType.APOTHEOSE && result[0] === 1) {
+        const consequence = RollService.randomIntFromInterval(1, RollService.PACIFICATEUR_CONSEQUENCE)
+        if (consequence == 1) {
+          data = "Dysfonctionnement, impossible d'agir"
+          // eslint-disable-next-line no-magic-numbers
+        } else if (consequence == 2) {
+          data = 'Subit un effet de dette du roi de la dernière attaque magique subit'
+          // eslint-disable-next-line no-magic-numbers
+        } else if (consequence == 3) {
+          data = 'Le personnage émet de la musique et se met à faire la danse du robot'
+          // eslint-disable-next-line no-magic-numbers
+        } else if (consequence == 4) {
+          data = 'Exacerber l’Umbra'
+          // eslint-disable-next-line no-magic-numbers
+        } else if (consequence == 5) {
+          data = "Le personnage brille d'une lumière aléatoire"
+          // eslint-disable-next-line no-magic-numbers
+        } else if (consequence == 6) {
+          data = 'Perturbation du don des langues'
+          // eslint-disable-next-line no-magic-numbers
+        } else if (consequence == 7) {
+          data = 'Hallucination'
+          // eslint-disable-next-line no-magic-numbers
+        } else if (consequence == 8) {
+          data = 'Rayon laser avec les yeux'
+          // eslint-disable-next-line no-magic-numbers
+        } else if (consequence == 9) {
+          data = 'Le personnage redevient un enfant pendant un certain temps'
+          // eslint-disable-next-line no-magic-numbers
+        } else if (consequence == 10) {
+          data = 'Communication avec le grand concepteur'
+        }
+      }
       const rollToCreate = new Roll({
         rollerName: p.rollerName,
         rollType: p.rollType,
+        data: data,
         date: new Date(),
-        secret: p.secret,
+        secret: secret,
         focus: usePf,
         power: usePp,
         proficiency: useProficiency,
@@ -246,7 +318,9 @@ export class RollService {
         characterToHelp: p.characterToHelp,
         resistRoll: p.resistRoll,
         helpUsed: helpUsed,
-        picture: character.picture // TODO update bdd si on change image
+        picture: character.apotheose ? character.pictureApotheose : character.picture,
+        empirique: p.empirique,
+        apotheose: character.apotheose
       })
       const createdRoll = this.rollProvider.add(rollToCreate)
       character.pf += pfDelta
@@ -259,6 +333,10 @@ export class RollService {
       }
       return createdRoll
     }
+  }
+
+  async deleteAll(): Promise<boolean> {
+    return this.rollProvider.deleteAll()
   }
 
   private static randomIntFromInterval(min, max) {

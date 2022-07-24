@@ -39,6 +39,16 @@ export class MjController {
     })
 
     p.httpGateway.addRoute({
+      id: HttpRouteIdentifiers.MJ_DELETE_ROLLS,
+      method: HttpRequestMethod.DELETE,
+      route: `/api/v1/rolls`,
+      useAuth: [],
+      reqValidator: undefined,
+      resValidator: undefined,
+      bind: this.deleteRolls.bind(this)
+    })
+
+    p.httpGateway.addRoute({
       id: HttpRouteIdentifiers.MJ_ADD_CHARACTER,
       method: HttpRequestMethod.PUT,
       route: `/api/v1/mj/character`,
@@ -95,6 +105,10 @@ export class MjController {
   async addCharacter(req: MjAddCharacterRequest): Promise<MjSheetVM> {
     await this.mjService.addCharacter(req.query.characterName)
     return this.get()
+  }
+
+  async deleteRolls(): Promise<boolean> {
+    return await this.rollService.deleteAll()
   }
 
   async template(req: MjAddCharacterFromTemplateRequest): Promise<MjAddCharacterFromTemplateResponse> {

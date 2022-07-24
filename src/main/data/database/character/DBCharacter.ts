@@ -5,6 +5,9 @@ export interface DBCharacter extends Document {
   name: string
   classe: string
   bloodline: string
+  apotheose: string
+  apotheoseImprovement?: string
+  apotheoseImprovementList: string[]
   chair: number
   esprit: number
   essence: number
@@ -27,6 +30,7 @@ export interface DBCharacter extends Document {
   relance: number
   playerName?: string
   picture?: string
+  pictureApotheose?: string
   background?: string
   buttonColor?: string
   textColor?: string
@@ -36,6 +40,9 @@ export const DBCharacterSchema = new Schema<DBCharacter, DBCharacterModelType<DB
   name: { type: String, required: true },
   classe: { type: String, required: true },
   bloodline: { type: String, required: true },
+  apotheose: { type: String, required: true },
+  apotheoseImprovement: { type: String, required: false },
+  apotheoseImprovementList: [{ type: String, required: true }],
   chair: { type: Number, required: true },
   esprit: { type: Number, required: true },
   essence: { type: Number, required: true },
@@ -58,6 +65,7 @@ export const DBCharacterSchema = new Schema<DBCharacter, DBCharacterModelType<DB
   relance: { type: Number, required: true },
   playerName: { type: String, required: false },
   picture: { type: String, required: false },
+  pictureApotheose: { type: String, required: false },
   background: { type: String, required: false },
   buttonColor: { type: String, required: false },
   textColor: { type: String, required: false }

@@ -16,6 +16,9 @@ export class Roll {
   characterToHelp?: string
   resistRoll?: string
   picture?: string
+  data?: string
+  empirique?: string
+  apotheose?: string
   helpUsed: boolean | null
 
   constructor(p: {
@@ -34,6 +37,9 @@ export class Roll {
     characterToHelp?: string
     resistRoll?: string
     picture?: string
+    data?: string
+    empirique?: string
+    apotheose?: string
     helpUsed: boolean | null
   }) {
     this.id = p.id ?? 'no_id'
@@ -51,6 +57,9 @@ export class Roll {
     this.characterToHelp = p.characterToHelp
     this.helpUsed = p.helpUsed
     this.picture = p.picture
+    this.data = p.data
+    this.empirique = p.empirique
+    this.apotheose = p.apotheose
     this.resistRoll = p.resistRoll
   }
 }

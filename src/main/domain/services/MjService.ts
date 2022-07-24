@@ -73,6 +73,9 @@ export class MjService {
           arcanesMax: template.arcanesMax,
           classe: template.classe,
           bloodline: template.bloodline,
+          apotheose: template.apotheose,
+          apotheoseImprovement: template.apotheoseImprovement,
+          apotheoseImprovementList: template.apotheoseImprovementList,
           notes: template.notes,
           // eslint-disable-next-line no-magic-numbers
           dettes: randomInt(0, 10),

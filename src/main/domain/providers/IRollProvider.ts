@@ -8,4 +8,5 @@ export interface IRollProvider {
   getLastForCharacter(character: Character): Promise<Roll | undefined>
   helpUsed(rollList: Roll[]): Promise<boolean>
   availableHelp(characterName: string): Promise<Roll[]>
+  deleteAll(): Promise<boolean>
 }

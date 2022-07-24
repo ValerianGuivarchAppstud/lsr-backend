@@ -1,3 +1,4 @@
+import { Apotheose } from './Apotheose'
 import { Bloodline } from './Bloodline'
 import { Category } from './Category'
 import { Classe } from './Classe'
@@ -25,10 +26,14 @@ export class Character {
   secunda: string
   notes: string
   category: Category
+  apotheose: Apotheose
+  apotheoseImprovement?: string
+  apotheoseImprovementList: string[]
   genre: Genre
   relance: number
   playerName?: string
   picture?: string
+  pictureApotheose?: string
   background?: string
   buttonColor?: string
   textColor?: string
@@ -54,11 +59,15 @@ export class Character {
     ppMax: number
     umbra: string
     category: string
+    apotheose: string
+    apotheoseImprovement?: string
+    apotheoseImprovementList: string[]
     pvMax: number
     genre: string
     relance: number
     playerName?: string
     picture?: string
+    pictureApotheose?: string
     background?: string
     buttonColor?: string
     textColor?: string
@@ -66,6 +75,9 @@ export class Character {
     this.name = p.name ?? ''
     this.classe = Classe[p.classe] ?? Classe.CHAMPION
     this.bloodline = Bloodline[p.bloodline] ?? Bloodline.AUCUN
+    this.apotheose = Apotheose[p.apotheose] ?? Apotheose.NONE
+    this.apotheoseImprovement = p.apotheoseImprovement
+    this.apotheoseImprovementList = p.apotheoseImprovementList ?? []
     this.chair = p.chair ?? 0
     this.esprit = p.esprit ?? 0
     this.essence = p.essence ?? 0
@@ -88,6 +100,7 @@ export class Character {
     this.relance = p.relance ?? 0
     this.playerName = p.playerName
     this.picture = p.picture
+    this.pictureApotheose = p.pictureApotheose
     this.background = p.background
     this.buttonColor = p.buttonColor
     this.textColor = p.textColor

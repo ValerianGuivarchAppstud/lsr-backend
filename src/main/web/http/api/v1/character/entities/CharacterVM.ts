@@ -1,3 +1,4 @@
+import { Apotheose } from '../../../../../../domain/models/character/Apotheose'
 import { Bloodline } from '../../../../../../domain/models/character/Bloodline'
 import { Category } from '../../../../../../domain/models/character/Category'
 import { Character } from '../../../../../../domain/models/character/Character'
@@ -28,9 +29,13 @@ export class CharacterVM {
   notes: string
   category: Category
   genre: Genre
+  apotheose: Apotheose
+  apotheoseImprovement?: string
+  apotheoseImprovementList: string[]
   relance: number
   playerName?: string
   picture?: string
+  pictureApotheose?: string
   background?: string
   buttonColor?: string
   textColor?: string
@@ -39,6 +44,9 @@ export class CharacterVM {
     this.name = p.name
     this.classe = p.classe
     this.bloodline = p.bloodline
+    this.apotheose = p.apotheose
+    this.apotheoseImprovement = p.apotheoseImprovement
+    this.apotheoseImprovementList = p.apotheoseImprovementList
     this.chair = p.chair
     this.esprit = p.esprit
     this.essence = p.essence
@@ -61,6 +69,7 @@ export class CharacterVM {
     this.relance = p.relance
     this.playerName = p.playerName
     this.picture = p.picture
+    this.pictureApotheose = p.pictureApotheose
     this.background = p.background
     this.buttonColor = p.buttonColor
     this.textColor = p.textColor
@@ -71,6 +80,9 @@ export class CharacterVM {
       name: p.character.name,
       classe: p.character.classe,
       bloodline: p.character.bloodline,
+      apotheose: p.character.apotheose,
+      apotheoseImprovement: p.character.apotheoseImprovement,
+      apotheoseImprovementList: p.character.apotheoseImprovementList,
       chair: p.character.chair,
       esprit: p.character.esprit,
       essence: p.character.essence,
@@ -93,6 +105,7 @@ export class CharacterVM {
       relance: p.character.relance,
       playerName: p.character.playerName,
       picture: p.character.picture,
+      pictureApotheose: p.character.pictureApotheose,
       background: p.character.background,
       buttonColor: p.character.buttonColor,
       textColor: p.character.textColor
@@ -104,6 +117,9 @@ export class CharacterVM {
       .prop('name', S.string().required())
       .prop('classe', S.string().required())
       .prop('bloodline', S.string().required())
+      .prop('apotheose', S.string().required())
+      .prop('apotheoseImprovement', S.string())
+      .prop('apotheoseImprovementList', S.array().items(S.string()))
       .prop('chair', S.integer().required())
       .prop('esprit', S.integer().required())
       .prop('essence', S.integer().required())
@@ -126,6 +142,7 @@ export class CharacterVM {
       .prop('relance', S.integer().required())
       .prop('playerName', S.string())
       .prop('picture', S.string())
+      .prop('pictureApotheose', S.string())
       .prop('background', S.string())
       .prop('buttonColor', S.string())
       .prop('textColor', S.string())

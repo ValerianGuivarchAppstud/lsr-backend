@@ -15,6 +15,9 @@ export class RollVM {
   malediction: number
   characterToHelp?: string
   picture?: string
+  empirique?: string
+  apotheose?: string
+  data?: string
   resistRollList: RollVM[]
   result: number[]
   success: number | null
@@ -35,6 +38,9 @@ export class RollVM {
     this.result = p.result
     this.success = p.success
     this.picture = p.picture
+    this.data = p.data
+    this.empirique = p.empirique
+    this.apotheose = p.apotheose
   }
 
   static from(p: { roll: Roll; rollList: Roll[] }): RollVM {
@@ -45,12 +51,15 @@ export class RollVM {
       date: p.roll.date,
       secret: p.roll.secret,
       focus: p.roll.focus,
+      data: p.roll.data,
       power: p.roll.power,
       proficiency: p.roll.proficiency,
       benediction: p.roll.benediction,
       malediction: p.roll.malediction,
       characterToHelp: p.roll.characterToHelp ?? undefined,
       picture: p.roll.picture,
+      empirique: p.roll.empirique,
+      apotheose: p.roll.apotheose,
       resistRollList:
         p.rollList
           .filter((resistRoll) => p.roll.id.toString() === resistRoll.resistRoll)
@@ -74,6 +83,9 @@ export class RollVM {
       .prop('benediction', S.integer().required())
       .prop('malediction', S.integer().required())
       .prop('picture', S.string())
+      .prop('data', S.string())
+      .prop('empirique', S.string())
+      .prop('apotheose', S.string())
       .prop('characterToHelp', S.string())
       .prop('resistRollList')
       .prop('result', S.array().required())

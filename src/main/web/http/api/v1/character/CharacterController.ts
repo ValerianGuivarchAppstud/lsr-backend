@@ -3,6 +3,7 @@ import { CharacterVM } from './entities/CharacterVM'
 import { CharacterCreateRequest, CharacterCreateRequestPayload } from './requests/CharacterCreateRequest'
 import { CharacterDeleteRequest, CharacterDeleteRequestPayload } from './requests/CharacterDeleteRequest'
 import { CharacterGetRequest, CharacterGetRequestPayload } from './requests/CharacterGetRequest'
+import { Apotheose } from '../../../../../domain/models/character/Apotheose'
 import { Bloodline } from '../../../../../domain/models/character/Bloodline'
 import { Category } from '../../../../../domain/models/character/Category'
 import { Character } from '../../../../../domain/models/character/Character'
@@ -79,6 +80,9 @@ export class CharacterController {
       name: req.body.character.name,
       classe: Classe[req.body.character.classe],
       bloodline: Bloodline[req.body.character.bloodline],
+      apotheose: Apotheose[req.body.character.apotheose],
+      apotheoseImprovement: req.body.character.apotheoseImprovement,
+      apotheoseImprovementList: req.body.character.apotheoseImprovementList,
       chair: req.body.character.chair,
       esprit: req.body.character.esprit,
       essence: req.body.character.essence,
@@ -101,6 +105,7 @@ export class CharacterController {
       relance: req.body.character.relance,
       playerName: req.body.character.playerName,
       picture: req.body.character.picture,
+      pictureApotheose: req.body.character.pictureApotheose,
       background: req.body.character.background,
       buttonColor: req.body.character.buttonColor,
       textColor: req.body.character.textColor

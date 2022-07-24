@@ -53,7 +53,7 @@ export class RollController {
       proficiency: req.body.proficiency,
       benediction: req.body.benediction,
       malediction: req.body.malediction,
-      empiriqueRoll: req.body.empiriqueRoll,
+      empirique: req.body.empiriqueRoll,
       characterToHelp: req.body.characterToHelp,
       resistRoll: req.body.resistRoll
     })
