@@ -75,7 +75,7 @@ export class CharacterVM {
     this.textColor = p.textColor
   }
 
-  static from(p: { character: Character }): CharacterVM {
+  static from(p: { character: Character; relance: number }): CharacterVM {
     return new CharacterVM({
       name: p.character.name,
       classe: p.character.classe,
@@ -102,7 +102,7 @@ export class CharacterVM {
       notes: p.character.notes,
       category: p.character.category,
       genre: p.character.genre,
-      relance: p.character.relance,
+      relance: p.relance,
       playerName: p.character.playerName,
       picture: p.character.picture,
       pictureApotheose: p.character.pictureApotheose,

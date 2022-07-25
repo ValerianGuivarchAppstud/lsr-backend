@@ -49,6 +49,26 @@ export class MjController {
     })
 
     p.httpGateway.addRoute({
+      id: HttpRouteIdentifiers.MJ_NEXT_ROUND,
+      method: HttpRequestMethod.PUT,
+      route: `/api/v1/mj/nextRound`,
+      useAuth: [],
+      reqValidator: undefined,
+      resValidator: undefined,
+      bind: this.nextRound.bind(this)
+    })
+
+    p.httpGateway.addRoute({
+      id: HttpRouteIdentifiers.MJ_STOP_BATTLE,
+      method: HttpRequestMethod.PUT,
+      route: `/api/v1/mj/stopBattle`,
+      useAuth: [],
+      reqValidator: undefined,
+      resValidator: undefined,
+      bind: this.stopBattle.bind(this)
+    })
+
+    p.httpGateway.addRoute({
       id: HttpRouteIdentifiers.MJ_ADD_CHARACTER,
       method: HttpRequestMethod.PUT,
       route: `/api/v1/mj/character`,
@@ -80,8 +100,8 @@ export class MjController {
   }
 
   async get(): Promise<MjSheetVM> {
-    const mj = await this.mjService.getSession()
-    const characters = await this.characterService.findManyByName(mj.characters)
+    const session = await this.mjService.getSession()
+    const characters = await this.characterService.findManyByName(session.characters)
     const lastRolls = await this.rollService.getLast()
     const pjNames = (await this.characterService.findAllByCategory(Category.PJ)).sort()
     const pnjNames = await this.characterService.findAllByCategory(Category.PNJ_ALLY)
@@ -91,14 +111,18 @@ export class MjController {
     const templateNames = (await this.characterService.findAllByCategory(Category.TEMPLATE)).sort()
     const playersName = await this.characterService.getPlayersName()
     return MjSheetVM.from({
-      mj: mj,
+      session: session,
       characters: characters,
       pjNames: pjNames,
       pnjNames: pnjNames,
       tempoNames: tempoNames,
       templateNames: templateNames,
       playersName: playersName,
-      rollList: lastRolls
+      rollList: lastRolls,
+      charactersBattleAllies: session.charactersBattleAllies,
+      charactersBattleEnnemies: session.charactersBattleEnnemies,
+      relanceMj: session.relanceMj,
+      round: session.round
     })
   }
 
@@ -126,5 +150,15 @@ export class MjController {
   async removeCharacter(req: MjRemoveCharacterRequest): Promise<MjSheetVM> {
     await this.mjService.removeCharacter(req.query.characterName)
     return this.get()
+  }
+
+  async nextRound(): Promise<boolean> {
+    await this.mjService.nextRound()
+    return true
+  }
+
+  async stopBattle(): Promise<boolean> {
+    await this.mjService.stopBattle()
+    return true
   }
 }

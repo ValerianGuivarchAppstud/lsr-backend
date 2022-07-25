@@ -15,15 +15,16 @@ export class HealSheetVM {
     this.pjAllies = p.pjAllies
   }
 
-  static from(p: { character: Character; rollList: Roll[]; pjAllies: Character[] }): HealSheetVM {
+  static from(p: { character: Character; rollList: Roll[]; pjAllies: Character[]; relance: number }): HealSheetVM {
     return new HealSheetVM({
       character: CharacterVM.from({
-        character: p.character
+        character: p.character,
+        relance: p.relance
       }),
       rollList: p.rollList
         .filter((roll) => roll.resistRoll === '')
         .map((roll) => RollVM.from({ roll: roll, rollList: p.rollList })),
-      pjAllies: p.pjAllies.map((character) => CharacterVM.from({ character: character }))
+      pjAllies: p.pjAllies.map((character) => CharacterVM.from({ character: character, relance: 0 }))
     })
   }
 

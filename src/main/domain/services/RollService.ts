@@ -2,11 +2,13 @@ import { ProviderErrors } from '../../data/errors/ProviderErrors'
 import { logger } from '../helpers/logs/Logging'
 import { Apotheose } from '../models/character/Apotheose'
 import { Bloodline } from '../models/character/Bloodline'
+import { Category } from '../models/character/Category'
 import { Classe } from '../models/character/Classe'
 import { Roll } from '../models/roll/Roll'
 import { RollType } from '../models/roll/RollType'
 import { ICharacterProvider } from '../providers/ICharacterProvider'
 import { IRollProvider } from '../providers/IRollProvider'
+import { ISessionProvider } from '../providers/ISessionProvider'
 
 export class RollService {
   // eslint-disable-next-line no-magic-numbers
@@ -27,12 +29,18 @@ export class RollService {
   public static readonly PACIFICATEUR_CONSEQUENCE = 10
 
   private rollProvider: IRollProvider
+  private sessionProvider: ISessionProvider
   private characterProvider: ICharacterProvider
   private readonly logger = logger(this.constructor.name)
 
-  constructor(p: { rollProvider: IRollProvider; characterProvider: ICharacterProvider }) {
+  constructor(p: {
+    rollProvider: IRollProvider
+    characterProvider: ICharacterProvider
+    sessionProvider: ISessionProvider
+  }) {
     this.characterProvider = p.characterProvider
     this.rollProvider = p.rollProvider
+    this.sessionProvider = p.sessionProvider
   }
 
   async getLast(): Promise<Roll[]> {
@@ -57,7 +65,13 @@ export class RollService {
       const lastRoll = await this.rollProvider.getLastForCharacter(character)
       if (lastRoll === undefined) {
         throw ProviderErrors.RollNoPreviousRoll()
-      } else if (character.relance <= 0) {
+      }
+
+      let relance = character.relance
+      if (character.category != Category.PJ) {
+        relance = (await this.sessionProvider.getSessionCharacter()).relanceMj
+      }
+      if (relance <= 0) {
         throw ProviderErrors.RollNotEnoughRelance()
       }
       lastRoll.date = new Date()
@@ -79,8 +93,12 @@ export class RollService {
         }
         lastRoll.result.push(dice)
       }
-      character.relance = character.relance - 1
-      this.characterProvider.createOrUpdate(character)
+      if (character.category == Category.PJ) {
+        character.relance = relance - 1
+        await this.characterProvider.createOrUpdate(character)
+      } else {
+        await this.sessionProvider.updateMjRelance(relance - 1)
+      }
       return await this.rollProvider.update(lastRoll)
     }
     let diceNumber = 0
@@ -322,7 +340,7 @@ export class RollService {
         empirique: p.empirique,
         apotheose: character.apotheose
       })
-      const createdRoll = this.rollProvider.add(rollToCreate)
+      const createdRoll = await this.rollProvider.add(rollToCreate)
       character.pf += pfDelta
       character.pp += ppDelta
       character.arcanes += arcaneDelta
@@ -330,6 +348,20 @@ export class RollService {
       this.characterProvider.createOrUpdate(character)
       if (helpCanBeUsed) {
         this.rollProvider.helpUsed(availableHelp)
+      }
+
+      if (
+        createdRoll.resistRoll == undefined &&
+        createdRoll.empirique == undefined &&
+        createdRoll.rollType != RollType.APOTHEOSE &&
+        createdRoll.rollType != RollType.EMPIRIQUE &&
+        createdRoll.rollType != RollType.SAUVEGARDE_VS_MORT &&
+        createdRoll.rollType != RollType.RELANCE
+      ) {
+        await this.sessionProvider.addCharacterBattle(
+          createdRoll.rollerName,
+          character.category == Category.PJ || character.category == Category.PNJ_ALLY
+        )
       }
       return createdRoll
     }

@@ -6,8 +6,7 @@ require('dotenv').config()
 
 // eslint-disable-next-line no-undef
 if (process.env.SONAR_TOKEN === undefined) {
-  throw new Error('specify the sonar token')
-}
+@}
 
 scanner(
   {

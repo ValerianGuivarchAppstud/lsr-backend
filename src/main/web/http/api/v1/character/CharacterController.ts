@@ -66,11 +66,16 @@ export class CharacterController {
     const lastRolls = await this.rollService.getLast()
     const session = await this.mjService.getSession()
     const playersName = await this.characterService.getPlayersName()
+    let relance = character.relance
+    if (character.category != Category.PJ) {
+      relance = session.relanceMj
+    }
     return CharacterSheetVM.from({
       character: character,
       rollList: lastRolls,
       pjAlliesNames: session.characters,
-      playersName: playersName
+      playersName: playersName,
+      relance: relance
     })
   }
 
@@ -111,8 +116,15 @@ export class CharacterController {
       textColor: req.body.character.textColor
     })
     const character = await this.characterService.createOrUpdateCharacter({ character: newCharacter })
+
+    let relance = newCharacter.relance
+    if (newCharacter.category != Category.PJ) {
+      const session = await this.mjService.getSession()
+      relance = session.relanceMj
+    }
     return CharacterVM.from({
-      character: character
+      character: character,
+      relance: relance
     })
   }
 

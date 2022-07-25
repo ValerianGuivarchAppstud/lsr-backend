@@ -22,13 +22,15 @@ export class CharacterSheetVM {
     rollList: Roll[]
     pjAlliesNames: string[]
     playersName: string[]
+    relance: number
   }): CharacterSheetVM {
     const t2 = p.rollList
       .filter((roll) => roll.resistRoll === '')
       .map((roll) => RollVM.from({ roll: roll, rollList: p.rollList }))
     return new CharacterSheetVM({
       character: CharacterVM.from({
-        character: p.character
+        character: p.character,
+        relance: p.relance
       }),
       rollList: t2,
       pjAlliesNames: p.pjAlliesNames,

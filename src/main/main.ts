@@ -1,9 +1,9 @@
 import { BackendApplicationParams } from './config/BackendApplicationParams'
 import { AgoraVisioProvider } from './data/agora/VisioProvider'
 import { DBCharacterProvider } from './data/database/character/DBCharacterProvider'
-import { DBMjProvider } from './data/database/mj/DBMjProvider'
 import { MongoGateway } from './data/database/MongoGateway'
 import { DBRollProvider } from './data/database/roll/DBRollProvider'
+import { DBSessionProvider } from './data/database/session/DBSessionProvider'
 import { logger } from './domain/helpers/logs/Logging'
 import { CharacterService } from './domain/services/CharacterService'
 import { MjService } from './domain/services/MjService'
@@ -43,22 +43,24 @@ export class BackendApplication {
       visioChannel: p.agora.agoraVisioChannel,
       appCertificate: p.agora.agoraAppCertificate
     })
-    const mjProvider = new DBMjProvider()
+    const sessionProvider = new DBSessionProvider()
     const rollProvider = new DBRollProvider()
 
     /**
      * SERVICES
      */
     const characterService = new CharacterService({
-      characterProvider: characterProvider
+      characterProvider: characterProvider,
+      sessionProvider: sessionProvider
     })
     const mjService = new MjService({
-      mjProvider: mjProvider,
+      sessionProvider: sessionProvider,
       characterProvider: characterProvider
     })
     const rollService = new RollService({
       rollProvider: rollProvider,
-      characterProvider: characterProvider
+      characterProvider: characterProvider,
+      sessionProvider: sessionProvider
     })
 
     /**
@@ -106,7 +108,7 @@ export class BackendApplication {
      */
     const agoraJob = new AgoraJob({
       visioProvider: visioProvider,
-      mjProvider: mjProvider
+      sessionProvider: sessionProvider
     })
     const characterJob = new CleanJob({
       characterProvider: characterProvider,

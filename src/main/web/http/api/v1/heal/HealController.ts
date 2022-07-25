@@ -1,5 +1,6 @@
 import { HealSheetVM } from './entities/HealSheetVM'
 import { HealGetRequest, HealGetRequestPayload } from './requests/HealGetRequest'
+import { Category } from '../../../../../domain/models/character/Category'
 import { Character } from '../../../../../domain/models/character/Character'
 import { CharacterService } from '../../../../../domain/services/CharacterService'
 import { MjService } from '../../../../../domain/services/MjService'
@@ -41,10 +42,16 @@ export class HealController {
     for (const name of pjAlliesName) {
       pjAllies.push(await this.characterService.findByName(name))
     }
+    let relance = character.relance
+    if (character.category != Category.PJ) {
+      const session = await this.mjService.getSession()
+      relance = session.relanceMj
+    }
     return HealSheetVM.from({
       character: character,
       rollList: lastRolls,
-      pjAllies: pjAllies
+      pjAllies: pjAllies,
+      relance: relance
     })
   }
 }

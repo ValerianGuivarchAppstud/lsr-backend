@@ -2,13 +2,16 @@ import { logger } from '../helpers/logs/Logging'
 import { Category } from '../models/character/Category'
 import { Character } from '../models/character/Character'
 import { ICharacterProvider } from '../providers/ICharacterProvider'
+import { ISessionProvider } from '../providers/ISessionProvider'
 
 export class CharacterService {
   private characterProvider: ICharacterProvider
+  private sessionProvider: ISessionProvider
   private readonly logger = logger(this.constructor.name)
 
-  constructor(p: { characterProvider: ICharacterProvider }) {
+  constructor(p: { characterProvider: ICharacterProvider; sessionProvider: ISessionProvider }) {
     this.characterProvider = p.characterProvider
+    this.sessionProvider = p.sessionProvider
   }
 
   async findByName(name: string): Promise<Character> {
@@ -34,6 +37,9 @@ export class CharacterService {
   }
 
   async createOrUpdateCharacter(p: { character: Character }): Promise<Character> {
+    if (p.character.category != Category.PJ) {
+      await this.sessionProvider.updateMjRelance(p.character.relance)
+    }
     return await this.characterProvider.createOrUpdate(p.character)
   }
 

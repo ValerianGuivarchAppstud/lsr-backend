@@ -1,36 +1,37 @@
 import { logger } from '../helpers/logs/Logging'
 import { Category } from '../models/character/Category'
 import { Character } from '../models/character/Character'
-import { Session } from '../models/mj/Mj'
+import { Round } from '../models/session/Round'
+import { Session } from '../models/session/Session'
 import { ICharacterProvider } from '../providers/ICharacterProvider'
-import { IMjProvider } from '../providers/IMjProvider'
+import { ISessionProvider } from '../providers/ISessionProvider'
 import { randomInt } from 'crypto'
 
 export class MjService {
-  private mjProvider: IMjProvider
+  private sessionProvider: ISessionProvider
   private characterProvider: ICharacterProvider
   private readonly logger = logger(this.constructor.name)
 
   // eslint-disable-next-line no-magic-numbers
   private static statByLevel: number[] = [7, 8, 8, 9, 10, 10, 11, 12, 12, 13, 14, 15, 16, 16, 17, 18, 18, 19, 20, 21]
 
-  constructor(p: { mjProvider: IMjProvider; characterProvider: ICharacterProvider }) {
-    this.mjProvider = p.mjProvider
+  constructor(p: { sessionProvider: ISessionProvider; characterProvider: ICharacterProvider }) {
+    this.sessionProvider = p.sessionProvider
     this.characterProvider = p.characterProvider
   }
 
   async getSession(): Promise<Session> {
-    const session = await this.mjProvider.getSessionCharacter()
+    const session = await this.sessionProvider.getSessionCharacter()
     for (const cName of session.characters) {
       if (!(await this.characterProvider.exist(cName))) {
-        await this.mjProvider.removeCharacter(cName)
+        await this.sessionProvider.removeCharacter(cName)
       }
     }
     return session
   }
 
   async addCharacter(characterName: string): Promise<boolean> {
-    return this.mjProvider.addCharacter(characterName)
+    return this.sessionProvider.addCharacter(characterName)
   }
 
   async addCharactersFromTemplate(
@@ -103,7 +104,7 @@ export class MjService {
         })
         const newC = await this.characterProvider.createOrUpdate(newCharacter)
         charactersList.push(newC)
-        await this.mjProvider.addCharacter(newC.name)
+        await this.sessionProvider.addCharacter(newC.name)
         number = number - 1
       }
       numero = numero + 1
@@ -112,6 +113,21 @@ export class MjService {
   }
 
   async removeCharacter(characterName: string): Promise<boolean> {
-    return this.mjProvider.removeCharacter(characterName)
+    return this.sessionProvider.removeCharacter(characterName)
+  }
+
+  async nextRound(): Promise<boolean> {
+    const session = await this.sessionProvider.getSessionCharacter()
+    if (session.round === Round.NONE) {
+      return await this.sessionProvider.updateBattle([], [], Round.PJ)
+    } else if (session.round === Round.PJ) {
+      return await this.sessionProvider.updateBattle(session.charactersBattleAllies, [], Round.PNJ)
+    } else {
+      return await this.sessionProvider.updateBattle([], session.charactersBattleEnnemies, Round.PJ)
+    }
+  }
+
+  async stopBattle(): Promise<boolean> {
+    return await this.sessionProvider.updateBattle([], [], Round.NONE)
   }
 }

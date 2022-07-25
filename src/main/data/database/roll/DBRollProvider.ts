@@ -57,7 +57,11 @@ export class DBRollProvider implements IRollProvider {
   }
 
   async update(roll: Roll): Promise<Roll> {
-    return DBRollProvider.toRoll(await DBRollModel.replaceOne({ _id: roll.id }, DBRollProvider.fromRoll(roll)))
+    const previousRoll = await DBRollModel.findOne({ _id: roll.id })
+    if (previousRoll) {
+      roll.date = previousRoll.date
+      return DBRollProvider.toRoll(await DBRollModel.replaceOne({ _id: roll.id }, DBRollProvider.fromRoll(roll)))
+    } else throw new Error('No updatable roll')
   }
 
   async getLast(size: number): Promise<Roll[]> {
