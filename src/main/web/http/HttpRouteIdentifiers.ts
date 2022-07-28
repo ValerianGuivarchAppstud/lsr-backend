@@ -53,7 +53,9 @@ export enum HttpRouteIdentifiers {
    * SETTINGS
    */
   SETTINGS_GET = 'SETTINGS_GET',
-  TOKEN_VISIO_GET = 'TOKEN_VISIO_GET',
+  TOKEN_GET = 'TOKEN_GET',
+  VISIO_GET = 'VISIO_GET',
+  UID_VISIO_PUT = 'UID_VISIO_PUT',
 
   /**
    * ROLL

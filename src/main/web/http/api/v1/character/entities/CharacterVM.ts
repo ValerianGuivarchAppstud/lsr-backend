@@ -39,6 +39,7 @@ export class CharacterVM {
   background?: string
   buttonColor?: string
   textColor?: string
+  uid?: number
 
   private constructor(p: CharacterVM) {
     this.name = p.name
@@ -73,6 +74,7 @@ export class CharacterVM {
     this.background = p.background
     this.buttonColor = p.buttonColor
     this.textColor = p.textColor
+    this.uid = p.uid
   }
 
   static from(p: { character: Character; relance: number }): CharacterVM {
@@ -108,7 +110,8 @@ export class CharacterVM {
       pictureApotheose: p.character.pictureApotheose,
       background: p.character.background,
       buttonColor: p.character.buttonColor,
-      textColor: p.character.textColor
+      textColor: p.character.textColor,
+      uid: p.character.uid
     })
   }
 
@@ -146,6 +149,7 @@ export class CharacterVM {
       .prop('background', S.string())
       .prop('buttonColor', S.string())
       .prop('textColor', S.string())
+      .prop('uid', S.number())
   }
 
   static getValidationSchema(): Record<string, unknown> {

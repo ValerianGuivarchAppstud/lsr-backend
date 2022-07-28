@@ -41,7 +41,7 @@ export class MjService {
     number: number
   ): Promise<Character[]> {
     const charactersList: Character[] = []
-    const template = await this.characterProvider.findByName(templateName)
+    const template = await this.characterProvider.findOneByName(templateName)
     if (level < 1) {
       level = 1
     }

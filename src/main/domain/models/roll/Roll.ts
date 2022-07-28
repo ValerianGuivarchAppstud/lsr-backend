@@ -13,6 +13,8 @@ export class Roll {
   malediction: number
   result: number[]
   success: number | null
+  juge12: number | null
+  juge34: number | null
   characterToHelp?: string
   resistRoll?: string
   picture?: string
@@ -34,6 +36,8 @@ export class Roll {
     malediction: number
     result: number[]
     success: number | null
+    juge12: number | null
+    juge34: number | null
     characterToHelp?: string
     resistRoll?: string
     picture?: string
@@ -54,6 +58,8 @@ export class Roll {
     this.malediction = p.malediction ?? 0
     this.result = p.result ?? []
     this.success = p.success ?? null
+    this.juge12 = p.juge12 ?? null
+    this.juge34 = p.juge34 ?? null
     this.characterToHelp = p.characterToHelp
     this.helpUsed = p.helpUsed
     this.picture = p.picture

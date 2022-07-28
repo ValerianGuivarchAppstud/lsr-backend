@@ -62,7 +62,7 @@ export class CharacterController {
   }
 
   async get(req: CharacterGetRequest): Promise<CharacterSheetVM> {
-    const character = await this.characterService.findByName(req.query.name)
+    const character = await this.characterService.findOneByName(req.query.name)
     const lastRolls = await this.rollService.getLast()
     const session = await this.mjService.getSession()
     const playersName = await this.characterService.getPlayersName()

@@ -21,6 +21,8 @@ export class RollVM {
   resistRollList: RollVM[]
   result: number[]
   success: number | null
+  juge12: number | null
+  juge34: number | null
 
   private constructor(p: RollVM) {
     this.id = p.id
@@ -37,6 +39,8 @@ export class RollVM {
     this.resistRollList = p.resistRollList
     this.result = p.result
     this.success = p.success
+    this.juge12 = p.juge12
+    this.juge34 = p.juge34
     this.picture = p.picture
     this.data = p.data
     this.empirique = p.empirique
@@ -65,7 +69,9 @@ export class RollVM {
           .filter((resistRoll) => p.roll.id.toString() === resistRoll.resistRoll)
           .map((roll) => RollVM.from({ roll: roll, rollList: [] })) ?? [],
       result: p.roll.result,
-      success: p.roll.success
+      success: p.roll.success,
+      juge12: p.roll.juge12,
+      juge34: p.roll.juge34
     })
     return r
   }
@@ -90,6 +96,8 @@ export class RollVM {
       .prop('resistRollList')
       .prop('result', S.array().required())
       .prop('success', S.integer())
+      .prop('juge12', S.integer())
+      .prop('juge34', S.integer())
   }
 
   static getValidationSchema(): Record<string, unknown> {

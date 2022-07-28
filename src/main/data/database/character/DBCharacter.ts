@@ -34,6 +34,7 @@ export interface DBCharacter extends Document {
   background?: string
   buttonColor?: string
   textColor?: string
+  uid?: number
 }
 
 export const DBCharacterSchema = new Schema<DBCharacter, DBCharacterModelType<DBCharacter>>({
@@ -51,6 +52,7 @@ export const DBCharacterSchema = new Schema<DBCharacter, DBCharacterModelType<DB
   pf: { type: Number, required: true },
   pfMax: { type: Number, required: true },
   pp: { type: Number, required: true },
+  uid: { type: Number, required: false },
   ppMax: { type: Number, required: true },
   dettes: { type: Number, required: true },
   arcanes: { type: Number, required: true },

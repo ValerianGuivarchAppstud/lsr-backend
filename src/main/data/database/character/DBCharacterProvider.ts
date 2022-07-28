@@ -17,6 +17,7 @@ export class DBCharacterProvider implements ICharacterProvider {
       apotheose: Apotheose[doc.apotheose],
       apotheoseImprovement: doc.apotheoseImprovement,
       apotheoseImprovementList: doc.apotheoseImprovementList,
+      uid: doc.uid,
       chair: doc.chair,
       esprit: doc.esprit,
       essence: doc.essence,
@@ -55,6 +56,7 @@ export class DBCharacterProvider implements ICharacterProvider {
       apotheoseImprovement: doc.apotheoseImprovement,
       apotheoseImprovementList: doc.apotheoseImprovementList,
       chair: doc.chair,
+      uid: doc.uid,
       esprit: doc.esprit,
       essence: doc.essence,
       pv: doc.pv,
@@ -102,10 +104,18 @@ export class DBCharacterProvider implements ICharacterProvider {
     }
   }
 
-  async findByName(name: string): Promise<Character> {
+  async findOneByName(name: string): Promise<Character> {
     const character = await DBCharacterModel.findOne({ name: name }).exec()
     if (!character) {
       throw ProviderErrors.EntityNotFound(name)
+    }
+    return DBCharacterProvider.toCharacter(character)
+  }
+
+  async findByName(name: string): Promise<Character | undefined> {
+    const character = await DBCharacterModel.findOne({ name: name }).exec()
+    if (!character) {
+      return undefined
     }
     return DBCharacterProvider.toCharacter(character)
   }

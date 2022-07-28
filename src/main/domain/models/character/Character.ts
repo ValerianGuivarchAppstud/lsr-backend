@@ -37,6 +37,7 @@ export class Character {
   background?: string
   buttonColor?: string
   textColor?: string
+  uid?: number
 
   constructor(p: {
     pp: number
@@ -71,6 +72,7 @@ export class Character {
     background?: string
     buttonColor?: string
     textColor?: string
+    uid?: number
   }) {
     this.name = p.name ?? ''
     this.classe = Classe[p.classe] ?? Classe.CHAMPION
@@ -104,5 +106,6 @@ export class Character {
     this.background = p.background
     this.buttonColor = p.buttonColor
     this.textColor = p.textColor
+    this.uid = p.uid
   }
 }

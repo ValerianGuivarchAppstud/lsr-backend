@@ -13,6 +13,8 @@ export interface DBRoll extends Document {
   malediction: number
   result: number[]
   success: number | null
+  juge12: number | null
+  juge34: number | null
   characterToHelp?: string
   picture?: string
   data?: string
@@ -34,6 +36,8 @@ export const DBRollSchema = new Schema<DBRoll, DBRollModelType<DBRoll>>({
   malediction: { type: Number, required: true },
   result: { type: [Number], required: true },
   success: { type: Number, required: false },
+  juge12: { type: Number, required: false },
+  juge34: { type: Number, required: false },
   characterToHelp: { type: String, required: false },
   picture: { type: String, required: false },
   data: { type: String, required: false },

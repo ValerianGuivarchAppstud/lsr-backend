@@ -14,7 +14,11 @@ export class CharacterService {
     this.sessionProvider = p.sessionProvider
   }
 
-  async findByName(name: string): Promise<Character> {
+  async findOneByName(name: string): Promise<Character> {
+    return this.characterProvider.findOneByName(name)
+  }
+
+  async findByName(name: string): Promise<Character | undefined> {
     return this.characterProvider.findByName(name)
   }
 

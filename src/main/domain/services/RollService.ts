@@ -18,11 +18,19 @@ export class RollService {
   // eslint-disable-next-line no-magic-numbers
   public static readonly DEATH_ROLL_VALUE = 20
   // eslint-disable-next-line no-magic-numbers
-  public static readonly ONE_SUCCESS_DICE = 5
+  public static readonly ONE_SUCCESS_DICE_12 = 1
+  // eslint-disable-next-line no-magic-numbers
+  public static readonly TWO_SUCCESS_DICE_12 = 2
+  // eslint-disable-next-line no-magic-numbers
+  public static readonly ONE_SUCCESS_DICE_34 = 3
+  // eslint-disable-next-line no-magic-numbers
+  public static readonly TWO_SUCCESS_DICE_34 = 4
+  // eslint-disable-next-line no-magic-numbers
+  public static readonly ONE_SUCCESS_DICE_56 = 5
+  // eslint-disable-next-line no-magic-numbers
+  public static readonly TWO_SUCCESS_DICE_56 = 6
   // eslint-disable-next-line no-magic-numbers
   public static readonly ONE_SUCCESS_EFFECT = 1
-  // eslint-disable-next-line no-magic-numbers
-  public static readonly TWO_SUCCESS_DICE = 6
   // eslint-disable-next-line no-magic-numbers
   public static readonly TWO_SUCCESS_EFFECT = 2
   // eslint-disable-next-line no-magic-numbers
@@ -60,7 +68,7 @@ export class RollService {
     characterToHelp?: string
     resistRoll?: string
   }): Promise<Roll> {
-    const character = await this.characterProvider.findByName(p.rollerName)
+    const character = await this.characterProvider.findOneByName(p.rollerName)
     if (p.rollType === RollType.RELANCE) {
       const lastRoll = await this.rollProvider.getLastForCharacter(character)
       if (lastRoll === undefined) {
@@ -75,21 +83,43 @@ export class RollService {
         throw ProviderErrors.RollNotEnoughRelance()
       }
       lastRoll.date = new Date()
+      lastRoll.juge12 =
+        (lastRoll.juge12 ?? 0) -
+        lastRoll.result.filter((r) => r === RollService.ONE_SUCCESS_DICE_12).length * RollService.ONE_SUCCESS_EFFECT -
+        lastRoll.result.filter((r) => r === RollService.TWO_SUCCESS_DICE_12).length * RollService.TWO_SUCCESS_EFFECT
+      lastRoll.juge34 =
+        (lastRoll.juge34 ?? 0) -
+        lastRoll.result.filter((r) => r === RollService.ONE_SUCCESS_DICE_34).length * RollService.ONE_SUCCESS_EFFECT -
+        lastRoll.result.filter((r) => r === RollService.TWO_SUCCESS_DICE_34).length * RollService.TWO_SUCCESS_EFFECT
       lastRoll.success =
         (lastRoll.success ?? 0) -
-        lastRoll.result.filter((r) => r === RollService.ONE_SUCCESS_DICE).length * RollService.ONE_SUCCESS_EFFECT -
-        lastRoll.result.filter((r) => r === RollService.TWO_SUCCESS_DICE).length * RollService.TWO_SUCCESS_EFFECT
+        lastRoll.result.filter((r) => r === RollService.ONE_SUCCESS_DICE_56).length * RollService.ONE_SUCCESS_EFFECT -
+        lastRoll.result.filter((r) => r === RollService.TWO_SUCCESS_DICE_56).length * RollService.TWO_SUCCESS_EFFECT
 
       const diceNumber = lastRoll.result.length
       lastRoll.result = []
       for (let i = 0; i < diceNumber; i++) {
         const dice = RollService.randomIntFromInterval(1, RollService.CLASSIC_ROLL_VALUE)
-        if (dice === RollService.ONE_SUCCESS_DICE) {
+        if (dice === RollService.ONE_SUCCESS_DICE_56) {
           lastRoll.success = (lastRoll.success ?? 0) + RollService.ONE_SUCCESS_EFFECT
         }
-        if (dice === RollService.TWO_SUCCESS_DICE) {
+        if (dice === RollService.ONE_SUCCESS_DICE_56) {
           // eslint-disable-next-line no-magic-numbers
           lastRoll.success = (lastRoll.success ?? 0) + RollService.TWO_SUCCESS_EFFECT
+        }
+        if (dice === RollService.ONE_SUCCESS_DICE_12) {
+          lastRoll.juge12 = (lastRoll.success ?? 0) + RollService.ONE_SUCCESS_EFFECT
+        }
+        if (dice === RollService.ONE_SUCCESS_DICE_12) {
+          // eslint-disable-next-line no-magic-numbers
+          lastRoll.juge12 = (lastRoll.success ?? 0) + RollService.TWO_SUCCESS_EFFECT
+        }
+        if (dice === RollService.ONE_SUCCESS_DICE_34) {
+          lastRoll.juge34 = (lastRoll.success ?? 0) + RollService.ONE_SUCCESS_EFFECT
+        }
+        if (dice === RollService.ONE_SUCCESS_DICE_34) {
+          // eslint-disable-next-line no-magic-numbers
+          lastRoll.juge34 = (lastRoll.success ?? 0) + RollService.TWO_SUCCESS_EFFECT
         }
         lastRoll.result.push(dice)
       }
@@ -245,35 +275,60 @@ export class RollService {
       dettesDelta++
     }
     let success: number | null = null
+    let juge12: number | null = null
+    let juge34: number | null = null
     if (successToCalculate) {
       success = 0
+      juge12 = 0
+      juge34 = 0
     }
     for (let i = 0; i < diceNumber; i++) {
       const dice = RollService.randomIntFromInterval(1, diceValue)
       if (successToCalculate) {
-        if (dice === RollService.ONE_SUCCESS_DICE) {
+        if (dice === RollService.ONE_SUCCESS_DICE_56) {
           success = (success ?? 0) + RollService.ONE_SUCCESS_EFFECT
         }
-        if (dice === RollService.TWO_SUCCESS_DICE) {
-          // eslint-disable-next-line no-magic-numbers
+        if (dice === RollService.ONE_SUCCESS_DICE_56) {
           success = (success ?? 0) + RollService.TWO_SUCCESS_EFFECT
+        }
+        if (dice === RollService.ONE_SUCCESS_DICE_12) {
+          juge12 = (juge12 ?? 0) + RollService.ONE_SUCCESS_EFFECT
+        }
+        if (dice === RollService.ONE_SUCCESS_DICE_12) {
+          juge12 = (juge12 ?? 0) + RollService.TWO_SUCCESS_EFFECT
+        }
+        if (dice === RollService.ONE_SUCCESS_DICE_34) {
+          juge34 = (juge34 ?? 0) + RollService.ONE_SUCCESS_EFFECT
+        }
+        if (dice === RollService.ONE_SUCCESS_DICE_34) {
+          juge34 = (juge34 ?? 0) + RollService.TWO_SUCCESS_EFFECT
         }
       }
       result.push(dice)
     }
     if (usePp) {
       success = (success ?? 0) + 1
+      juge12 = (juge12 ?? 0) + 1
+      juge34 = (juge34 ?? 0) + 1
     }
     if (useProficiency) {
       success = (success ?? 0) + 1
+      juge12 = (juge12 ?? 0) + 1
+      juge34 = (juge34 ?? 0) + 1
     }
 
     if (p.rollType === RollType.SOIN) {
       if (character.bloodline !== Bloodline.LUMIERE) {
         // eslint-disable-next-line no-magic-numbers
         success = Math.floor((1 + (success ?? 0)) / 2)
+        // eslint-disable-next-line no-magic-numbers
+        juge12 = Math.floor((1 + (juge12 ?? 0)) / 2)
+        // eslint-disable-next-line no-magic-numbers
+        juge34 = Math.floor((1 + (juge34 ?? 0)) / 2)
       }
       success = (success ?? 0) + 1
+      juge12 = (juge12 ?? 0) + 1
+      juge34 = (juge34 ?? 0) + 1
     }
     if (character.pf + pfDelta < 0) {
       throw ProviderErrors.RollNotEnoughPf()
@@ -333,6 +388,8 @@ export class RollService {
         malediction: p.malediction,
         result: result,
         success: success,
+        juge12: juge12,
+        juge34: juge34,
         characterToHelp: p.characterToHelp,
         resistRoll: p.resistRoll,
         helpUsed: helpUsed,
