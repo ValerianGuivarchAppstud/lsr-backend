@@ -41,12 +41,12 @@ export class CharacterVM {
   textColor?: string
   uid?: number
   help?: number
-  pjAlliesNames: string[]
+  alliesName: string[]
 
   private constructor(p: CharacterVM) {
     this.name = p.name
     this.classe = p.classe
-    this.pjAlliesNames = p.pjAlliesNames
+    this.alliesName = p.alliesName
     this.bloodline = p.bloodline
     this.apotheose = p.apotheose
     this.apotheoseImprovement = p.apotheoseImprovement
@@ -81,10 +81,10 @@ export class CharacterVM {
     this.help = p.help
   }
 
-  static from(p: { character: Character; relance: number; help: number; pjAlliesNames: string[] }): CharacterVM {
+  static from(p: { character: Character; relance: number; help: number; alliesName: string[] }): CharacterVM {
     return new CharacterVM({
       name: p.character.name,
-      pjAlliesNames: p.pjAlliesNames,
+      alliesName: p.alliesName,
       classe: p.character.classe,
       bloodline: p.character.bloodline,
       apotheose: p.character.apotheose,
@@ -153,7 +153,7 @@ export class CharacterVM {
       .prop('picture', S.string())
       .prop('pictureApotheose', S.string())
       .prop('background', S.string())
-      .prop('pjAlliesNames', S.array().items(S.string()))
+      .prop('alliesName', S.array().items(S.string()))
       .prop('buttonColor', S.string())
       .prop('textColor', S.string())
       .prop('uid', S.number())

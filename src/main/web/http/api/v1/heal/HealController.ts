@@ -37,9 +37,9 @@ export class HealController {
   async get(req: HealGetRequest): Promise<HealSheetVM> {
     const character = await this.characterService.findOneByName(req.query.name)
     const lastRolls = await this.rollService.getLast()
-    const pjAlliesName = (await this.mjService.getSession()).characters
+    const alliesName = (await this.mjService.getSession()).characters
     const pjAllies: Character[] = []
-    for (const name of pjAlliesName) {
+    for (const name of alliesName) {
       pjAllies.push(await this.characterService.findOneByName(name))
     }
     let relance = character.relance

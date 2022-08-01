@@ -65,15 +65,15 @@ export class CharacterController {
     const character = await this.characterService.findOneByName(req.query.name)
     const lastRolls = await this.rollService.getLast()
     const session = await this.mjService.getSession()
-    let pjAlliesNames: string[]
+    let alliesName: string[]
     const characters = await this.characterService.findAll('MJ')
     if (character.category === Category.PJ) {
-      pjAlliesNames = session.characters.filter((characterName) => {
+      alliesName = session.characters.filter((characterName) => {
         const character = characters.filter((c) => characterName == c.name)[0]
         return character?.category === Category.PJ || character?.category === Category.PNJ_ALLY
       })
     } else {
-      pjAlliesNames = session.characters
+      alliesName = session.characters
     }
     const playersName = await this.characterService.getPlayersName()
     const help = await this.rollService.getHelp(character.name)
@@ -84,7 +84,7 @@ export class CharacterController {
     return CharacterSheetVM.from({
       character: character,
       rollList: lastRolls,
-      pjAlliesNames: pjAlliesNames,
+      alliesName: alliesName,
       playersName: playersName,
       relance: relance,
       help: help
@@ -139,7 +139,7 @@ export class CharacterController {
       character: character,
       relance: relance,
       help: help,
-      pjAlliesNames: []
+      alliesName: []
     })
   }
 

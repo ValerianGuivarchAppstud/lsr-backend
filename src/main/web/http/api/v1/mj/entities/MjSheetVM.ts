@@ -58,7 +58,7 @@ export class MjSheetVM {
           character: character,
           relance: relance,
           help: 0,
-          pjAlliesNames: p.characters.map((c) => c.name)
+          alliesName: p.characters.map((c) => c.name)
         })
       }),
       pjNames: p.pjNames,

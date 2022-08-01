@@ -164,7 +164,7 @@ export class MjController {
           character: character,
           relance: 0,
           help: 0,
-          pjAlliesNames: []
+          alliesName: []
         })
       )
     })

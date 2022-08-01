@@ -18,7 +18,7 @@ export class CharacterSheetVM {
   static from(p: {
     character: Character
     rollList: Roll[]
-    pjAlliesNames: string[]
+    alliesName: string[]
     playersName: string[]
     relance: number
     help: number
@@ -31,7 +31,7 @@ export class CharacterSheetVM {
         character: p.character,
         relance: p.relance,
         help: p.help,
-        pjAlliesNames: p.pjAlliesNames
+        alliesName: p.alliesName
       }),
       rollList: t2,
       playersName: p.playersName

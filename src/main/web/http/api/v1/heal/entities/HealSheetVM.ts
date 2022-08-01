@@ -21,13 +21,13 @@ export class HealSheetVM {
         character: p.character,
         relance: p.relance,
         help: 0,
-        pjAlliesNames: []
+        alliesName: []
       }),
       rollList: p.rollList
         .filter((roll) => roll.resistRoll === '')
         .map((roll) => RollVM.from({ roll: roll, rollList: p.rollList })),
       pjAllies: p.pjAllies.map((character) =>
-        CharacterVM.from({ character: character, relance: 0, help: 0, pjAlliesNames: [] })
+        CharacterVM.from({ character: character, relance: 0, help: 0, alliesName: [] })
       )
     })
   }
