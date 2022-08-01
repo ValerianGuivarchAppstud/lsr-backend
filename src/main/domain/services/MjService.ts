@@ -100,7 +100,12 @@ export class MjService {
           genre: template.genre,
           relance: 0,
           picture: template.picture,
-          background: template.background
+          background: template.background,
+          buttonColor: template.buttonColor,
+          textColor: template.textColor,
+          uid: template.uid,
+          playerName: template.playerName,
+          pictureApotheose: template.pictureApotheose
         })
         const newC = await this.characterProvider.createOrUpdate(newCharacter)
         charactersList.push(newC)

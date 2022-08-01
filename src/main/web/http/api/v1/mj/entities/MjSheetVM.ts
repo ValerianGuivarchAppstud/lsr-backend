@@ -54,7 +54,12 @@ export class MjSheetVM {
         if (character.category != Category.PJ) {
           relance = p.relanceMj
         }
-        return CharacterVM.from({ character: character, relance: relance })
+        return CharacterVM.from({
+          character: character,
+          relance: relance,
+          help: 0,
+          pjAlliesNames: p.characters.map((c) => c.name)
+        })
       }),
       pjNames: p.pjNames,
       pnjNames: p.pnjNames,

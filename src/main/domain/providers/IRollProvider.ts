@@ -9,4 +9,5 @@ export interface IRollProvider {
   helpUsed(rollList: Roll[]): Promise<boolean>
   availableHelp(characterName: string): Promise<Roll[]>
   deleteAll(): Promise<boolean>
+  delete(id: string): Promise<boolean>
 }

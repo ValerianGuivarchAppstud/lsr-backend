@@ -7,13 +7,11 @@ import S, { ObjectSchema } from 'fluent-json-schema'
 export class CharacterSheetVM {
   character: CharacterVM
   rollList: RollVM[]
-  pjAlliesNames: string[]
   playersName: string[]
 
   private constructor(p: CharacterSheetVM) {
     this.character = p.character
     this.rollList = p.rollList
-    this.pjAlliesNames = p.pjAlliesNames
     this.playersName = p.playersName
   }
 
@@ -23,6 +21,7 @@ export class CharacterSheetVM {
     pjAlliesNames: string[]
     playersName: string[]
     relance: number
+    help: number
   }): CharacterSheetVM {
     const t2 = p.rollList
       .filter((roll) => roll.resistRoll === '')
@@ -30,10 +29,11 @@ export class CharacterSheetVM {
     return new CharacterSheetVM({
       character: CharacterVM.from({
         character: p.character,
-        relance: p.relance
+        relance: p.relance,
+        help: p.help,
+        pjAlliesNames: p.pjAlliesNames
       }),
       rollList: t2,
-      pjAlliesNames: p.pjAlliesNames,
       playersName: p.playersName
     })
   }
@@ -42,7 +42,6 @@ export class CharacterSheetVM {
     return S.object()
       .prop('character', CharacterVM.getFluentSchema())
       .prop('rollList', S.array().items(RollVM.getFluentSchema()))
-      .prop('pjAlliesNames', S.array().items(S.string()))
       .prop('playersName', S.array().items(S.string()))
   }
 

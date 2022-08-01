@@ -3,6 +3,7 @@ import { Character } from '../../../domain/models/character/Character'
 import { Roll } from '../../../domain/models/roll/Roll'
 import { RollType } from '../../../domain/models/roll/RollType'
 import { IRollProvider } from '../../../domain/providers/IRollProvider'
+import { ProviderErrors } from '../../errors/ProviderErrors'
 
 export class DBRollProvider implements IRollProvider {
   private static toRoll(doc: DBRoll): Roll {
@@ -81,6 +82,14 @@ export class DBRollProvider implements IRollProvider {
 
   async deleteAll(): Promise<boolean> {
     await DBRollModel.deleteMany({})
+    return true
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const roll = await DBRollModel.findByIdAndDelete(id).exec()
+    if (!roll) {
+      throw ProviderErrors.EntityNotFound('roll ${id}')
+    }
     return true
   }
 

@@ -40,10 +40,13 @@ export class CharacterVM {
   buttonColor?: string
   textColor?: string
   uid?: number
+  help?: number
+  pjAlliesNames: string[]
 
   private constructor(p: CharacterVM) {
     this.name = p.name
     this.classe = p.classe
+    this.pjAlliesNames = p.pjAlliesNames
     this.bloodline = p.bloodline
     this.apotheose = p.apotheose
     this.apotheoseImprovement = p.apotheoseImprovement
@@ -75,11 +78,13 @@ export class CharacterVM {
     this.buttonColor = p.buttonColor
     this.textColor = p.textColor
     this.uid = p.uid
+    this.help = p.help
   }
 
-  static from(p: { character: Character; relance: number }): CharacterVM {
+  static from(p: { character: Character; relance: number; help: number; pjAlliesNames: string[] }): CharacterVM {
     return new CharacterVM({
       name: p.character.name,
+      pjAlliesNames: p.pjAlliesNames,
       classe: p.character.classe,
       bloodline: p.character.bloodline,
       apotheose: p.character.apotheose,
@@ -111,7 +116,8 @@ export class CharacterVM {
       background: p.character.background,
       buttonColor: p.character.buttonColor,
       textColor: p.character.textColor,
-      uid: p.character.uid
+      uid: p.character.uid,
+      help: p.help
     })
   }
 
@@ -147,9 +153,11 @@ export class CharacterVM {
       .prop('picture', S.string())
       .prop('pictureApotheose', S.string())
       .prop('background', S.string())
+      .prop('pjAlliesNames', S.array().items(S.string()))
       .prop('buttonColor', S.string())
       .prop('textColor', S.string())
       .prop('uid', S.number())
+      .prop('help', S.number())
   }
 
   static getValidationSchema(): Record<string, unknown> {

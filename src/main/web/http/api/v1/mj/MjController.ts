@@ -6,12 +6,14 @@ import {
 import { MjAddCharacterFromTemplateResponse } from './requests/MjAddCharacterFromTemplateResponse'
 import { MjAddCharacterRequest, MjAddCharacterRequestPayload } from './requests/MjAddCharacterRequest'
 import { MjRemoveCharacterRequest, MjRemoveCharacterRequestPayload } from './requests/MjRemoveCharacterRequest'
+import { MjRemoveRollRequest } from './requests/MjRemoveRollRequest'
 import { Category } from '../../../../../domain/models/character/Category'
 import { CharacterService } from '../../../../../domain/services/CharacterService'
 import { MjService } from '../../../../../domain/services/MjService'
 import { RollService } from '../../../../../domain/services/RollService'
 import { HttpRequestMethod, IHttpGateway } from '../../../../../gateways/IHttpGateway'
 import { HttpRouteIdentifiers } from '../../../HttpRouteIdentifiers'
+import { CharacterVM } from '../character/entities/CharacterVM'
 
 export class MjController {
   private readonly characterService: CharacterService
@@ -36,6 +38,16 @@ export class MjController {
       reqValidator: undefined,
       resValidator: MjSheetVM.getValidationSchema(),
       bind: this.get.bind(this)
+    })
+
+    p.httpGateway.addRoute({
+      id: HttpRouteIdentifiers.MJ_DELETE_ROLL,
+      method: HttpRequestMethod.DELETE,
+      route: `/api/v1/roll`,
+      useAuth: [],
+      reqValidator: undefined,
+      resValidator: undefined,
+      bind: this.deleteRoll.bind(this)
     })
 
     p.httpGateway.addRoute({
@@ -135,6 +147,10 @@ export class MjController {
     return await this.rollService.deleteAll()
   }
 
+  async deleteRoll(req: MjRemoveRollRequest): Promise<boolean> {
+    return await this.rollService.delete(req.query.id)
+  }
+
   async template(req: MjAddCharacterFromTemplateRequest): Promise<MjAddCharacterFromTemplateResponse> {
     const templateNewCharacters = await this.mjService.addCharactersFromTemplate(
       req.body.templateName,
@@ -143,7 +159,14 @@ export class MjController {
       req.body.number
     )
     return new MjAddCharacterFromTemplateResponse({
-      templateNewCharacters: templateNewCharacters
+      templateNewCharacters: templateNewCharacters.map((character) =>
+        CharacterVM.from({
+          character: character,
+          relance: 0,
+          help: 0,
+          pjAlliesNames: []
+        })
+      )
     })
   }
 

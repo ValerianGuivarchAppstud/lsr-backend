@@ -288,19 +288,19 @@ export class RollService {
         if (dice === RollService.ONE_SUCCESS_DICE_56) {
           success = (success ?? 0) + RollService.ONE_SUCCESS_EFFECT
         }
-        if (dice === RollService.ONE_SUCCESS_DICE_56) {
+        if (dice === RollService.TWO_SUCCESS_DICE_56) {
           success = (success ?? 0) + RollService.TWO_SUCCESS_EFFECT
         }
         if (dice === RollService.ONE_SUCCESS_DICE_12) {
           juge12 = (juge12 ?? 0) + RollService.ONE_SUCCESS_EFFECT
         }
-        if (dice === RollService.ONE_SUCCESS_DICE_12) {
+        if (dice === RollService.TWO_SUCCESS_DICE_12) {
           juge12 = (juge12 ?? 0) + RollService.TWO_SUCCESS_EFFECT
         }
         if (dice === RollService.ONE_SUCCESS_DICE_34) {
           juge34 = (juge34 ?? 0) + RollService.ONE_SUCCESS_EFFECT
         }
-        if (dice === RollService.ONE_SUCCESS_DICE_34) {
+        if (dice === RollService.TWO_SUCCESS_DICE_34) {
           juge34 = (juge34 ?? 0) + RollService.TWO_SUCCESS_EFFECT
         }
       }
@@ -393,7 +393,7 @@ export class RollService {
         characterToHelp: p.characterToHelp,
         resistRoll: p.resistRoll,
         helpUsed: helpUsed,
-        picture: character.apotheose ? character.pictureApotheose : character.picture,
+        picture: character.apotheose != Apotheose.NONE ? character.pictureApotheose : character.picture,
         empirique: p.empirique,
         apotheose: character.apotheose
       })
@@ -408,8 +408,8 @@ export class RollService {
       }
 
       if (
-        createdRoll.resistRoll == undefined &&
-        createdRoll.empirique == undefined &&
+        createdRoll.resistRoll === '' &&
+        createdRoll.empirique === '' &&
         createdRoll.rollType != RollType.APOTHEOSE &&
         createdRoll.rollType != RollType.EMPIRIQUE &&
         createdRoll.rollType != RollType.SAUVEGARDE_VS_MORT &&
@@ -428,8 +428,27 @@ export class RollService {
     return this.rollProvider.deleteAll()
   }
 
+  async delete(id: string): Promise<boolean> {
+    return this.rollProvider.delete(id)
+  }
+
   private static randomIntFromInterval(min, max) {
     // min and max included
     return Math.floor(Math.random() * (max - min + 1) + min)
+  }
+
+  async getHelp(name: string): Promise<number> {
+    const availableHelp = await this.rollProvider.availableHelp(name)
+    let totalHelp = 0
+    for (const help of availableHelp) {
+      if (!help.helpUsed) {
+        if (help.success === 0) {
+          totalHelp--
+        } else {
+          totalHelp = totalHelp + (help.success ?? 0)
+        }
+      }
+    }
+    return totalHelp
   }
 }
