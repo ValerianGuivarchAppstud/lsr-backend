@@ -183,6 +183,9 @@ export class RollService {
       if (character.apotheose == Apotheose.FINALE) {
         // eslint-disable-next-line no-magic-numbers
         diceValueDelta = diceValueDelta + 5
+      } else if (character.apotheose == Apotheose.ARCANIQUE) {
+        // eslint-disable-next-line no-magic-numbers
+        diceValueDelta = diceValueDelta + 2
       } else {
         // eslint-disable-next-line no-magic-numbers
         diceValueDelta = diceValueDelta + 3
