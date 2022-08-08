@@ -25,6 +25,7 @@ export class CharacterSheetVM {
   }): CharacterSheetVM {
     const t2 = p.rollList
       .filter((roll) => roll.resistRoll === '')
+      .filter((roll) => !roll.secret || roll.rollerName === p.character.name)
       .map((roll) => RollVM.from({ roll: roll, rollList: p.rollList }))
     return new CharacterSheetVM({
       character: CharacterVM.from({

@@ -25,6 +25,7 @@ export class HealSheetVM {
       }),
       rollList: p.rollList
         .filter((roll) => roll.resistRoll === '')
+        .filter((roll) => !roll.secret || roll.rollerName === p.character.name)
         .map((roll) => RollVM.from({ roll: roll, rollList: p.rollList })),
       pjAllies: p.pjAllies.map((character) =>
         CharacterVM.from({ character: character, relance: 0, help: 0, alliesName: [] })

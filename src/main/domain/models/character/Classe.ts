@@ -9,5 +9,6 @@ export enum Classe {
   SOLDAT = 'SOLDAT',
   AVATAR = 'AVATAR',
   SKINWALKER = 'SKINWALKER',
+  GAME_MASTER = 'GAME_MASTER',
   INCONNU = 'INCONNU'
 }

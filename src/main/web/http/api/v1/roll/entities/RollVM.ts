@@ -8,6 +8,7 @@ export class RollVM {
   rollType: RollType
   date: Date
   secret: boolean
+  displayDices: boolean
   focus: boolean
   power: boolean
   proficiency: boolean
@@ -30,6 +31,7 @@ export class RollVM {
     this.rollType = p.rollType
     this.date = p.date
     this.secret = p.secret
+    this.displayDices = p.displayDices
     this.focus = p.focus
     this.power = p.power
     this.proficiency = p.proficiency
@@ -54,6 +56,7 @@ export class RollVM {
       rollType: p.roll.rollType,
       date: p.roll.date,
       secret: p.roll.secret,
+      displayDices: p.roll.displayDices,
       focus: p.roll.focus,
       data: p.roll.data,
       power: p.roll.power,
@@ -82,6 +85,7 @@ export class RollVM {
       .prop('rollerName', S.string().required())
       .prop('rollType', S.string().required())
       .prop('secret', S.boolean().required())
+      .prop('displayDices', S.boolean().required())
       .prop('date', S.string().format(S.FORMATS.DATE_TIME).required())
       .prop('focus', S.boolean().required())
       .prop('power', S.boolean().required())

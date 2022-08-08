@@ -384,6 +384,7 @@ export class RollService {
         data: data,
         date: new Date(),
         secret: secret,
+        displayDices: character.category === Category.PJ || character.category === Category.PNJ_ALLY,
         focus: usePf,
         power: usePp,
         proficiency: useProficiency,

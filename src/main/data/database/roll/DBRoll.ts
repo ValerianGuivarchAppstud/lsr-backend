@@ -6,6 +6,7 @@ export interface DBRoll extends Document {
   rollType: string
   date: Date
   secret: boolean
+  displayDices: boolean
   focus: boolean
   power: boolean
   proficiency: boolean
@@ -29,6 +30,7 @@ export const DBRollSchema = new Schema<DBRoll, DBRollModelType<DBRoll>>({
   rollType: { type: String, required: true },
   date: { type: Date, required: true },
   secret: { type: Boolean, required: true },
+  displayDices: { type: Boolean, required: true },
   focus: { type: Boolean, required: true },
   power: { type: Boolean, required: true },
   proficiency: { type: Boolean, required: true },

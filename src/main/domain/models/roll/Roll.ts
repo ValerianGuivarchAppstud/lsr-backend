@@ -6,6 +6,7 @@ export class Roll {
   rollType: RollType
   date: Date
   secret: boolean
+  displayDices: boolean
   focus: boolean
   power: boolean
   proficiency: boolean
@@ -29,6 +30,7 @@ export class Roll {
     rollType: RollType
     date: Date
     secret: boolean
+    displayDices: boolean
     focus: boolean
     power: boolean
     proficiency: boolean
@@ -51,6 +53,7 @@ export class Roll {
     this.rollType = p.rollType ?? RollType.EMPIRIQUE
     this.date = p.date ?? Date()
     this.secret = p.secret ?? false
+    this.displayDices = p.displayDices ?? true
     this.focus = p.focus ?? false
     this.power = p.power ?? false
     this.proficiency = p.proficiency ?? false
