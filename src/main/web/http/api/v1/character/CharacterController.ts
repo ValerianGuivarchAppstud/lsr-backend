@@ -41,6 +41,16 @@ export class CharacterController {
     })
 
     p.httpGateway.addRoute({
+      id: HttpRouteIdentifiers.CHARACTER_GETALL,
+      method: HttpRequestMethod.GET,
+      route: `/api/v1/characters`,
+      useAuth: [],
+      reqValidator: undefined,
+      resValidator: undefined,
+      bind: this.getAll.bind(this)
+    })
+
+    p.httpGateway.addRoute({
       id: HttpRouteIdentifiers.CHARACTER_CREATE_OR_UPDATE,
       method: HttpRequestMethod.PUT,
       route: `/api/v1/character`,
@@ -89,6 +99,20 @@ export class CharacterController {
       relance: relance,
       help: help
     })
+  }
+
+  async getAll(): Promise<CharacterSheetVM[]> {
+    const characters = await this.characterService.findAll('MJ')
+    return characters.map((character) =>
+      CharacterSheetVM.from({
+        character: character,
+        rollList: [],
+        alliesName: [],
+        playersName: [],
+        relance: 0,
+        help: 0
+      })
+    )
   }
 
   async createOrUpdate(req: CharacterCreateRequest): Promise<CharacterVM> {
