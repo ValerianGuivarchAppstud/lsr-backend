@@ -10,5 +10,7 @@ export enum Classe {
   AVATAR = 'AVATAR',
   SKINWALKER = 'SKINWALKER',
   GAME_MASTER = 'GAME_MASTER',
+  ROI = 'ROI',
+  PAROLIER = 'PAROLIER',
   INCONNU = 'INCONNU'
 }
