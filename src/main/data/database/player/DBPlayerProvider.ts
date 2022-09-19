@@ -42,7 +42,7 @@ export class DBPlayerProvider implements IPlayerProvider {
   }
 
   async findOneByName(name: string): Promise<Player> {
-    let player = await DBPlayerModel.findOne({ name: name }).exec()
+    let player = await DBPlayerModel.findOne({ playerName: name }).exec()
     if (!player) {
       await this.createOrUpdate({ relance: 0, playerName: name })
       player = await DBPlayerModel.findOne({ name: name }).exec()
