@@ -7,6 +7,7 @@ import { Classe } from '../models/character/Classe'
 import { Roll } from '../models/roll/Roll'
 import { RollType } from '../models/roll/RollType'
 import { ICharacterProvider } from '../providers/ICharacterProvider'
+import { IPlayerProvider } from '../providers/IPlayerProvider'
 import { IRollProvider } from '../providers/IRollProvider'
 import { ISessionProvider } from '../providers/ISessionProvider'
 
@@ -39,13 +40,17 @@ export class RollService {
   private rollProvider: IRollProvider
   private sessionProvider: ISessionProvider
   private characterProvider: ICharacterProvider
+  private playerProvider: IPlayerProvider
+
   private readonly logger = logger(this.constructor.name)
 
   constructor(p: {
     rollProvider: IRollProvider
     characterProvider: ICharacterProvider
+    playerProvider: IPlayerProvider
     sessionProvider: ISessionProvider
   }) {
+    this.playerProvider = p.playerProvider
     this.characterProvider = p.characterProvider
     this.rollProvider = p.rollProvider
     this.sessionProvider = p.sessionProvider
@@ -74,12 +79,9 @@ export class RollService {
       if (lastRoll === undefined) {
         throw ProviderErrors.RollNoPreviousRoll()
       }
+      const player = await this.playerProvider.findOneByName(character.playerName ?? 'MJ')
 
-      let relance = character.relance
-      if (character.category != Category.PJ) {
-        relance = (await this.sessionProvider.getSessionCharacter()).relanceMj
-      }
-      if (relance <= 0) {
+      if (player.relance <= 0) {
         throw ProviderErrors.RollNotEnoughRelance()
       }
       lastRoll.date = new Date()
@@ -123,12 +125,10 @@ export class RollService {
         }
         lastRoll.result.push(dice)
       }
-      if (character.category == Category.PJ) {
-        character.relance = relance - 1
-        await this.characterProvider.createOrUpdate(character)
-      } else {
-        await this.sessionProvider.updateMjRelance(relance - 1)
-      }
+      await this.playerProvider.createOrUpdate({
+        playerName: player.playerName,
+        relance: player.relance - 1
+      })
       return await this.rollProvider.update(lastRoll)
     }
     let diceNumber = 0

@@ -30,7 +30,6 @@ export class Character {
   apotheoseImprovement?: string
   apotheoseImprovementList: string[]
   genre: Genre
-  relance: number
   playerName?: string
   picture?: string
   pictureApotheose?: string
@@ -65,7 +64,6 @@ export class Character {
     apotheoseImprovementList: string[]
     pvMax: number
     genre: string
-    relance: number
     playerName?: string
     picture?: string
     pictureApotheose?: string
@@ -99,7 +97,6 @@ export class Character {
     this.notes = p.notes ?? ''
     this.category = Category[p.category] ?? Category.TEMPO
     this.genre = Genre[p.genre] ?? Genre.AUTRE
-    this.relance = p.relance ?? 0
     this.playerName = p.playerName
     this.picture = p.picture
     this.pictureApotheose = p.pictureApotheose

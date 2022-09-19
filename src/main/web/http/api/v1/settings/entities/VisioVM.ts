@@ -12,7 +12,7 @@ export class VisioVM {
   static from(p: { characters: Character[] }): VisioVM {
     return new VisioVM({
       characters: p.characters.map((character) =>
-        CharacterVM.from({ character: character, relance: character.relance, help: 0, alliesName: [] })
+        CharacterVM.from({ character: character, relance: 0, help: 0, alliesName: [] })
       )
     })
   }

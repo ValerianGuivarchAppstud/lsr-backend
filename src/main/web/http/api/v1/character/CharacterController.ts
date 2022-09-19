@@ -87,10 +87,7 @@ export class CharacterController {
     }
     const playersName = await this.characterService.getPlayersName()
     const help = await this.rollService.getHelp(character.name)
-    let relance = character.relance
-    if (character.category != Category.PJ) {
-      relance = session.relanceMj
-    }
+    const relance = (await this.characterService.findPlayerByPlayerName(character.playerName ?? 'MJ')).relance
     return CharacterSheetVM.from({
       character: character,
       rollList: lastRolls,
@@ -143,7 +140,6 @@ export class CharacterController {
       notes: req.body.character.notes,
       category: Category[req.body.character.category],
       genre: Genre[req.body.character.genre],
-      relance: req.body.character.relance,
       playerName: req.body.character.playerName,
       picture: req.body.character.picture,
       pictureApotheose: req.body.character.pictureApotheose,
@@ -152,16 +148,15 @@ export class CharacterController {
       textColor: req.body.character.textColor
     })
     const character = await this.characterService.createOrUpdateCharacter({ character: newCharacter })
+    const player = await this.characterService.createOrUpdatePlayer(
+      character.playerName ?? 'MJ',
+      req.body.character.relance
+    )
 
     const help = await this.rollService.getHelp(character.name)
-    let relance = newCharacter.relance
-    if (newCharacter.category != Category.PJ) {
-      const session = await this.mjService.getSession()
-      relance = session.relanceMj
-    }
     return CharacterVM.from({
       character: character,
-      relance: relance,
+      relance: player.relance,
       help: help,
       alliesName: []
     })

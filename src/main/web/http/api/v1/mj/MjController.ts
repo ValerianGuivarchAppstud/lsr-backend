@@ -114,6 +114,7 @@ export class MjController {
   async get(): Promise<MjSheetVM> {
     const session = await this.mjService.getSession()
     const characters = await this.characterService.findManyByName(session.characters)
+    const players = await this.characterService.findAllPlayers()
     const lastRolls = await this.rollService.getLast()
     const pjNames = (await this.characterService.findAllByCategory(Category.PJ)).sort()
     const pnjNames = await this.characterService.findAllByCategory(Category.PNJ_ALLY)
@@ -133,7 +134,7 @@ export class MjController {
       rollList: lastRolls,
       charactersBattleAllies: session.charactersBattleAllies,
       charactersBattleEnnemies: session.charactersBattleEnnemies,
-      relanceMj: session.relanceMj,
+      players: players,
       round: session.round
     })
   }

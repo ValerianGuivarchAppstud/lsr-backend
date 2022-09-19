@@ -2,6 +2,7 @@ import { BackendApplicationParams } from './config/BackendApplicationParams'
 import { AgoraVisioProvider } from './data/agora/VisioProvider'
 import { DBCharacterProvider } from './data/database/character/DBCharacterProvider'
 import { MongoGateway } from './data/database/MongoGateway'
+import { DBPlayerProvider } from './data/database/player/DBPlayerProvider'
 import { DBRollProvider } from './data/database/roll/DBRollProvider'
 import { DBSessionProvider } from './data/database/session/DBSessionProvider'
 import { logger } from './domain/helpers/logs/Logging'
@@ -38,6 +39,7 @@ export class BackendApplication {
      * PROVIDERS
      */
     const characterProvider = new DBCharacterProvider()
+    const playerProvider = new DBPlayerProvider()
     const visioProvider = new AgoraVisioProvider({
       appId: p.agora.agoraAppId,
       visioChannel: p.agora.agoraVisioChannel,
@@ -51,7 +53,8 @@ export class BackendApplication {
      */
     const characterService = new CharacterService({
       characterProvider: characterProvider,
-      sessionProvider: sessionProvider
+      sessionProvider: sessionProvider,
+      playerProvider: playerProvider
     })
     const mjService = new MjService({
       sessionProvider: sessionProvider,
@@ -60,7 +63,8 @@ export class BackendApplication {
     const rollService = new RollService({
       rollProvider: rollProvider,
       characterProvider: characterProvider,
-      sessionProvider: sessionProvider
+      sessionProvider: sessionProvider,
+      playerProvider: playerProvider
     })
 
     /**

@@ -14,7 +14,6 @@ import fastify, {
 } from 'fastify'
 import fastifyCors from 'fastify-cors'
 import fastifyMultipart from 'fastify-multipart'
-import { FastifySSEPlugin } from 'fastify-sse-v2'
 import fastifySwagger from 'fastify-swagger'
 import HttpStatus from 'http-status-codes'
 import { IncomingHttpHeaders } from 'http'
@@ -35,7 +34,6 @@ export class HttpGateway implements IHttpGateway {
       logger: this.logger,
       bodyLimit: p.requestMaxSize
     })
-    this.instance.register(FastifySSEPlugin)
     this.httpPort = p.httpPort
     this.httpHost = p.httpHost
     this.routes = []

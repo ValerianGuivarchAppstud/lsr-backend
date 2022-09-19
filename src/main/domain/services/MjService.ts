@@ -98,7 +98,6 @@ export class MjService {
           // eslint-disable-next-line no-magic-numbers
           pvMax: chair * 2,
           genre: template.genre,
-          relance: 0,
           picture: template.picture,
           background: template.background,
           buttonColor: template.buttonColor,

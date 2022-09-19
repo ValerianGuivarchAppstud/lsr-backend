@@ -1,5 +1,5 @@
-import { Category } from '../../../../../../domain/models/character/Category'
 import { Character } from '../../../../../../domain/models/character/Character'
+import { Player } from '../../../../../../domain/models/character/Player'
 import { Roll } from '../../../../../../domain/models/roll/Roll'
 import { Round } from '../../../../../../domain/models/session/Round'
 import { Session } from '../../../../../../domain/models/session/Session'
@@ -35,28 +35,24 @@ export class MjSheetVM {
   }
 
   static from(p: {
-    session: Session
-    characters: Character[]
-    pjNames: string[]
-    pnjNames: string[]
-    tempoNames: string[]
-    templateNames: string[]
     playersName: string[]
     rollList: Roll[]
-    charactersBattleAllies: string[]
-    charactersBattleEnnemies: string[]
-    relanceMj: number
+    characters: Character[]
+    templateNames: string[]
     round: Round
+    charactersBattleEnnemies: string[]
+    session: Session
+    pnjNames: string[]
+    charactersBattleAllies: string[]
+    pjNames: string[]
+    players: Player[]
+    tempoNames: string[]
   }): MjSheetVM {
     return new MjSheetVM({
       characters: p.characters.map((character) => {
-        let relance = character.relance
-        if (character.category != Category.PJ) {
-          relance = p.relanceMj
-        }
         return CharacterVM.from({
           character: character,
-          relance: relance,
+          relance: p.players.filter((player) => player.playerName === character.playerName)[0].relance,
           help: 0,
           alliesName: p.characters.map((c) => c.name)
         })
@@ -71,7 +67,7 @@ export class MjSheetVM {
         .map((roll) => RollVM.from({ roll: roll, rollList: p.rollList })),
       charactersBattleAllies: p.charactersBattleAllies,
       charactersBattleEnnemies: p.charactersBattleEnnemies,
-      relanceMj: p.relanceMj,
+      relanceMj: 0,
       round: p.round
     })
   }
