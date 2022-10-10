@@ -12,5 +12,6 @@ export enum Classe {
   GAME_MASTER = 'GAME_MASTER',
   ROI = 'ROI',
   PAROLIER = 'PAROLIER',
+  DRAGON = 'DRAGON',
   INCONNU = 'INCONNU'
 }
