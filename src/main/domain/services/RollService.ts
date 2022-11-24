@@ -231,10 +231,16 @@ export class RollService {
       diceNumber = character.essence + diceValueDelta
       diceValue = RollService.CLASSIC_ROLL_VALUE
       dettesDelta++
+      if (character.bloodline === Bloodline.FOUDRE) {
+        dettesDelta++
+      }
     } else if (p.rollType === RollType.SOIN && character.bloodline !== Bloodline.LUMIERE) {
       diceNumber = character.essence + diceValueDelta
       diceValue = RollService.CLASSIC_ROLL_VALUE
       dettesDelta++
+      if (character.bloodline === Bloodline.FOUDRE) {
+        dettesDelta++
+      }
       ppDelta--
     } else if (p.rollType === RollType.SOIN && character.bloodline === Bloodline.LUMIERE) {
       diceNumber = character.essence + diceValueDelta
@@ -276,6 +282,9 @@ export class RollService {
     if (usePp) {
       ppDelta--
       dettesDelta++
+      if (character.bloodline === Bloodline.FOUDRE) {
+        dettesDelta++
+      }
     }
     let success: number | null = null
     let juge12: number | null = null
