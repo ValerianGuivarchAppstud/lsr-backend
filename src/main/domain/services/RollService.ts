@@ -229,6 +229,10 @@ export class RollService {
       ppDelta--
     } else if (p.rollType === RollType.MAGIE_FORTE) {
       diceNumber = character.essence + diceValueDelta
+      if(character.name === 'Jack Frost') {
+        // eslint-disable-next-line no-magic-numbers
+        diceNumber = diceNumber + 18
+      }
       diceValue = RollService.CLASSIC_ROLL_VALUE
       dettesDelta++
       if (character.bloodline === Bloodline.FOUDRE) {
