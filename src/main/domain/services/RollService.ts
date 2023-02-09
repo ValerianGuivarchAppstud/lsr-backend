@@ -129,7 +129,7 @@ export class RollService {
       } else {
         await this.sessionProvider.updateMjRelance(relance - 1)
       }
-      return await this.rollProvider.update(lastRoll)
+      return lastRoll //await this.rollProvider.update(lastRoll)
     }
     let diceNumber = 0
     let diceValue = 0
@@ -229,7 +229,7 @@ export class RollService {
       ppDelta--
     } else if (p.rollType === RollType.MAGIE_FORTE) {
       diceNumber = character.essence + diceValueDelta
-      if(character.name === 'Jack Frost') {
+      if (character.name === 'Jack Frost') {
         // eslint-disable-next-line no-magic-numbers
         diceNumber = diceNumber + 18
       }

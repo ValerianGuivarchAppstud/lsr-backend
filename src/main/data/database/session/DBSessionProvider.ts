@@ -13,7 +13,8 @@ export class DBSessionProvider implements ISessionProvider {
       charactersBattleAllies: doc.charactersBattleAllies,
       charactersBattleEnnemies: doc.charactersBattleEnnemies,
       round: Round[doc.round],
-      relanceMj: doc.relanceMj
+      relanceMj: doc.relanceMj,
+      chaos: doc.chaos
     })
   }
 
@@ -24,7 +25,8 @@ export class DBSessionProvider implements ISessionProvider {
       charactersBattleAllies: doc.charactersBattleAllies,
       charactersBattleEnnemies: doc.charactersBattleEnnemies,
       round: doc.round.toString(),
-      relanceMj: doc.relanceMj
+      relanceMj: doc.relanceMj,
+      chaos: doc.chaos
     } as DBSession
   }
 
@@ -40,7 +42,8 @@ export class DBSessionProvider implements ISessionProvider {
             charactersBattleAllies: [],
             charactersBattleEnnemies: [],
             round: Round.NONE,
-            relanceMj: 0
+            relanceMj: 0,
+            chaos: 0
           })
         )
       )

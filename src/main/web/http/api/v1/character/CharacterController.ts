@@ -97,7 +97,8 @@ export class CharacterController {
       alliesName: alliesName,
       playersName: playersName,
       relance: relance,
-      help: help
+      help: help,
+      chaos: session.chaos
     })
   }
 
@@ -110,7 +111,8 @@ export class CharacterController {
         alliesName: [],
         playersName: [],
         relance: 0,
-        help: 0
+        help: 0,
+        chaos: 0
       })
     )
   }

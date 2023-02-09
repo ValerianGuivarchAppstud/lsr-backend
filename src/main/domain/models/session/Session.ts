@@ -4,6 +4,7 @@ export class Session {
   characters: string[]
   visioToken: string
   relanceMj: number
+  chaos: number
   charactersBattleAllies: string[]
   charactersBattleEnnemies: string[]
   round: Round
@@ -15,6 +16,7 @@ export class Session {
     charactersBattleEnnemies: string[]
     round: Round
     relanceMj: number
+    chaos: number
   }) {
     this.characters = p.characters ?? []
     this.visioToken = p.visioToken ?? ''
@@ -22,5 +24,6 @@ export class Session {
     this.charactersBattleEnnemies = p.charactersBattleEnnemies ?? []
     this.round = p.round ?? Round.NONE
     this.relanceMj = p.relanceMj ?? 0
+    this.chaos = p.chaos ?? 0
   }
 }

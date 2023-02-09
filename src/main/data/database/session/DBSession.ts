@@ -8,6 +8,7 @@ export interface DBSession extends Document {
   charactersBattleAllies: string[]
   charactersBattleEnnemies: string[]
   relanceMj: number
+  chaos: number
 }
 
 export const DBSessionSchema = new Schema<DBSession, DBSessionModelType<DBSession>>({
@@ -16,7 +17,8 @@ export const DBSessionSchema = new Schema<DBSession, DBSessionModelType<DBSessio
   charactersBattleAllies: [{ type: String, required: true }],
   charactersBattleEnnemies: [{ type: String, required: true }],
   round: { type: String, required: true },
-  relanceMj: { type: Number, required: true }
+  relanceMj: { type: Number, required: true },
+  chaos: { type: Number, required: true }
 }).plugin(mongoosePaginate)
 
 type DBSessionModelType<T extends Document> = PaginateModel<T>

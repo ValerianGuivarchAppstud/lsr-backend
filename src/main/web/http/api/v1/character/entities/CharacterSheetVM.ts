@@ -8,11 +8,13 @@ export class CharacterSheetVM {
   character: CharacterVM
   rollList: RollVM[]
   playersName: string[]
+  chaos: number
 
   private constructor(p: CharacterSheetVM) {
     this.character = p.character
     this.rollList = p.rollList
     this.playersName = p.playersName
+    this.chaos = p.chaos
   }
 
   static from(p: {
@@ -22,6 +24,7 @@ export class CharacterSheetVM {
     playersName: string[]
     relance: number
     help: number
+    chaos: number
   }): CharacterSheetVM {
     const t2 = p.rollList
       .filter((roll) => roll.resistRoll === '')
@@ -35,7 +38,8 @@ export class CharacterSheetVM {
         alliesName: p.alliesName
       }),
       rollList: t2,
-      playersName: p.playersName
+      playersName: p.playersName,
+      chaos: p.chaos
     })
   }
 
@@ -44,6 +48,7 @@ export class CharacterSheetVM {
       .prop('character', CharacterVM.getFluentSchema())
       .prop('rollList', S.array().items(RollVM.getFluentSchema()))
       .prop('playersName', S.array().items(S.string()))
+      .prop('chaos', S.number())
   }
 
   static getValidationSchema(): Record<string, unknown> {
