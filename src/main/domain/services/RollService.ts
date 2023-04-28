@@ -103,21 +103,21 @@ export class RollService {
         if (dice === RollService.ONE_SUCCESS_DICE_56) {
           lastRoll.success = (lastRoll.success ?? 0) + RollService.ONE_SUCCESS_EFFECT
         }
-        if (dice === RollService.ONE_SUCCESS_DICE_56) {
+        if (dice === RollService.TWO_SUCCESS_DICE_56) {
           // eslint-disable-next-line no-magic-numbers
           lastRoll.success = (lastRoll.success ?? 0) + RollService.TWO_SUCCESS_EFFECT
         }
         if (dice === RollService.ONE_SUCCESS_DICE_12) {
           lastRoll.juge12 = (lastRoll.success ?? 0) + RollService.ONE_SUCCESS_EFFECT
         }
-        if (dice === RollService.ONE_SUCCESS_DICE_12) {
+        if (dice === RollService.TWO_SUCCESS_DICE_12) {
           // eslint-disable-next-line no-magic-numbers
           lastRoll.juge12 = (lastRoll.success ?? 0) + RollService.TWO_SUCCESS_EFFECT
         }
         if (dice === RollService.ONE_SUCCESS_DICE_34) {
           lastRoll.juge34 = (lastRoll.success ?? 0) + RollService.ONE_SUCCESS_EFFECT
         }
-        if (dice === RollService.ONE_SUCCESS_DICE_34) {
+        if (dice === RollService.TWO_SUCCESS_DICE_34) {
           // eslint-disable-next-line no-magic-numbers
           lastRoll.juge34 = (lastRoll.success ?? 0) + RollService.TWO_SUCCESS_EFFECT
         }
@@ -301,6 +301,22 @@ export class RollService {
     for (let i = 0; i < diceNumber; i++) {
       const dice = RollService.randomIntFromInterval(1, diceValue)
       if (successToCalculate) {
+        if (character.name === 'Vernet') {
+          if (
+            dice === RollService.ONE_SUCCESS_DICE_12 ||
+            dice === RollService.ONE_SUCCESS_DICE_34 ||
+            dice === RollService.ONE_SUCCESS_DICE_56
+          ) {
+            success = (success ?? 0) + RollService.ONE_SUCCESS_EFFECT
+          }
+          if (
+            dice === RollService.TWO_SUCCESS_DICE_12 ||
+            dice === RollService.TWO_SUCCESS_DICE_34 ||
+            dice === RollService.TWO_SUCCESS_DICE_56
+          ) {
+            success = (success ?? 0) + RollService.TWO_SUCCESS_EFFECT
+          }
+        }
         if (dice === RollService.ONE_SUCCESS_DICE_56) {
           success = (success ?? 0) + RollService.ONE_SUCCESS_EFFECT
         }
