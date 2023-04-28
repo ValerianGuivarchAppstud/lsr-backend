@@ -301,7 +301,7 @@ export class RollService {
     for (let i = 0; i < diceNumber; i++) {
       const dice = RollService.randomIntFromInterval(1, diceValue)
       if (successToCalculate) {
-        if (character.name === 'Vernet') {
+        if (character.name === 'Vernet' && i === 0) {
           if (
             dice === RollService.ONE_SUCCESS_DICE_12 ||
             dice === RollService.ONE_SUCCESS_DICE_34 ||
