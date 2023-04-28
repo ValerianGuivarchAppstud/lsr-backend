@@ -316,24 +316,25 @@ export class RollService {
           ) {
             success = (success ?? 0) + RollService.TWO_SUCCESS_EFFECT
           }
-        }
-        if (dice === RollService.ONE_SUCCESS_DICE_56) {
-          success = (success ?? 0) + RollService.ONE_SUCCESS_EFFECT
-        }
-        if (dice === RollService.TWO_SUCCESS_DICE_56) {
-          success = (success ?? 0) + RollService.TWO_SUCCESS_EFFECT
-        }
-        if (dice === RollService.ONE_SUCCESS_DICE_12) {
-          juge12 = (juge12 ?? 0) + RollService.ONE_SUCCESS_EFFECT
-        }
-        if (dice === RollService.TWO_SUCCESS_DICE_12) {
-          juge12 = (juge12 ?? 0) + RollService.TWO_SUCCESS_EFFECT
-        }
-        if (dice === RollService.ONE_SUCCESS_DICE_34) {
-          juge34 = (juge34 ?? 0) + RollService.ONE_SUCCESS_EFFECT
-        }
-        if (dice === RollService.TWO_SUCCESS_DICE_34) {
-          juge34 = (juge34 ?? 0) + RollService.TWO_SUCCESS_EFFECT
+        } else {
+          if (dice === RollService.ONE_SUCCESS_DICE_56) {
+            success = (success ?? 0) + RollService.ONE_SUCCESS_EFFECT
+          }
+          if (dice === RollService.TWO_SUCCESS_DICE_56) {
+            success = (success ?? 0) + RollService.TWO_SUCCESS_EFFECT
+          }
+          if (dice === RollService.ONE_SUCCESS_DICE_12) {
+            juge12 = (juge12 ?? 0) + RollService.ONE_SUCCESS_EFFECT
+          }
+          if (dice === RollService.TWO_SUCCESS_DICE_12) {
+            juge12 = (juge12 ?? 0) + RollService.TWO_SUCCESS_EFFECT
+          }
+          if (dice === RollService.ONE_SUCCESS_DICE_34) {
+            juge34 = (juge34 ?? 0) + RollService.ONE_SUCCESS_EFFECT
+          }
+          if (dice === RollService.TWO_SUCCESS_DICE_34) {
+            juge34 = (juge34 ?? 0) + RollService.TWO_SUCCESS_EFFECT
+          }
         }
       }
       result.push(dice)
