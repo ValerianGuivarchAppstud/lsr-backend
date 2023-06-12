@@ -351,10 +351,10 @@ export class RollService {
         const dice = RollService.randomIntFromInterval(1, diceValue)
         if (successToCalculate) {
           if (dice === RollService.ONE_SUCCESS_DICE_56) {
-            successBis = (success ?? 0) + RollService.ONE_SUCCESS_EFFECT
+            successBis = (successBis ?? 0) + RollService.ONE_SUCCESS_EFFECT
           }
           if (dice === RollService.TWO_SUCCESS_DICE_56) {
-            successBis = (success ?? 0) + RollService.TWO_SUCCESS_EFFECT
+            successBis = (successBis ?? 0) + RollService.TWO_SUCCESS_EFFECT
           }
           if (dice === RollService.ONE_SUCCESS_DICE_12) {
             juge12Bis = (juge12Bis ?? 0) + RollService.ONE_SUCCESS_EFFECT
