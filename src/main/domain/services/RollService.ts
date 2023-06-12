@@ -69,6 +69,7 @@ export class RollService {
     resistRoll?: string
   }): Promise<Roll> {
     const character = await this.characterProvider.findOneByName(p.rollerName)
+    const charactersBoost = await this.sessionProvider.getCharactersBoost()
     if (p.rollType === RollType.RELANCE) {
       const lastRoll = await this.rollProvider.getLastForCharacter(character)
       if (lastRoll === undefined) {
@@ -141,7 +142,7 @@ export class RollService {
     let usePf = p.focus
     let usePp = p.power
     let useProficiency = p.proficiency
-    const result: number[] = []
+    let result: number[] = []
     let successToCalculate = true
     const availableHelp = await this.rollProvider.availableHelp(p.rollerName)
     let helpCanBeUsed = false
@@ -338,6 +339,44 @@ export class RollService {
         }
       }
       result.push(dice)
+    }
+
+    let successBis: number | null = null
+    let juge12Bis: number | null = null
+    let juge34Bis: number | null = null
+    const resultBis: number[] = []
+
+    if (charactersBoost.includes(character.name)) {
+      for (let i = 0; i < diceNumber; i++) {
+        const dice = RollService.randomIntFromInterval(1, diceValue)
+        if (successToCalculate) {
+          if (dice === RollService.ONE_SUCCESS_DICE_56) {
+            successBis = (success ?? 0) + RollService.ONE_SUCCESS_EFFECT
+          }
+          if (dice === RollService.TWO_SUCCESS_DICE_56) {
+            successBis = (success ?? 0) + RollService.TWO_SUCCESS_EFFECT
+          }
+          if (dice === RollService.ONE_SUCCESS_DICE_12) {
+            juge12Bis = (juge12Bis ?? 0) + RollService.ONE_SUCCESS_EFFECT
+          }
+          if (dice === RollService.TWO_SUCCESS_DICE_12) {
+            juge12Bis = (juge12Bis ?? 0) + RollService.TWO_SUCCESS_EFFECT
+          }
+          if (dice === RollService.ONE_SUCCESS_DICE_34) {
+            juge34Bis = (juge34Bis ?? 0) + RollService.ONE_SUCCESS_EFFECT
+          }
+          if (dice === RollService.TWO_SUCCESS_DICE_34) {
+            juge34Bis = (juge34Bis ?? 0) + RollService.TWO_SUCCESS_EFFECT
+          }
+        }
+        resultBis.push(dice)
+      }
+    }
+    if ((success ? success : 0) < (successBis ? successBis : 0)) {
+      success = successBis
+      juge12 = juge12Bis
+      juge34 = juge34Bis
+      result = resultBis
     }
     if (usePp) {
       success = (success ?? 0) + 1

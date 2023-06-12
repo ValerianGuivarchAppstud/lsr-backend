@@ -12,6 +12,7 @@ export class DBSessionProvider implements ISessionProvider {
       visioToken: doc.visioToken,
       charactersBattleAllies: doc.charactersBattleAllies,
       charactersBattleEnnemies: doc.charactersBattleEnnemies,
+      charactersBoost: doc.charactersBoost,
       round: Round[doc.round],
       relanceMj: doc.relanceMj,
       chaos: doc.chaos
@@ -24,6 +25,7 @@ export class DBSessionProvider implements ISessionProvider {
       visioToken: doc.visioToken,
       charactersBattleAllies: doc.charactersBattleAllies,
       charactersBattleEnnemies: doc.charactersBattleEnnemies,
+      charactersBoost: doc.charactersBoost,
       round: doc.round.toString(),
       relanceMj: doc.relanceMj,
       chaos: doc.chaos
@@ -41,6 +43,7 @@ export class DBSessionProvider implements ISessionProvider {
             visioToken: '',
             charactersBattleAllies: [],
             charactersBattleEnnemies: [],
+            charactersBoost: [],
             round: Round.NONE,
             relanceMj: 0,
             chaos: 0
@@ -137,5 +140,12 @@ export class DBSessionProvider implements ISessionProvider {
       }
       return true
     } else throw new Error('No session')
+  }
+
+  async getCharactersBoost(): Promise<string[]> {
+    const session = await DBSessionModel.findOne().exec()
+    if (session) {
+      return session.charactersBoost
+    } else return []
   }
 }

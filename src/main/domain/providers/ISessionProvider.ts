@@ -9,4 +9,5 @@ export interface ISessionProvider {
   updateBattle(charactersBattleAllies: string[], charactersBattleEnnemies: string[], round: Round): Promise<boolean>
   addCharacterBattle(rollerName: string, ally: boolean): Promise<boolean>
   updateMjRelance(relance: number): Promise<boolean>
+  getCharactersBoost(): Promise<string[]>
 }

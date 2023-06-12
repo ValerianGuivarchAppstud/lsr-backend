@@ -7,6 +7,7 @@ export interface DBSession extends Document {
   round: string
   charactersBattleAllies: string[]
   charactersBattleEnnemies: string[]
+  charactersBoost: string[]
   relanceMj: number
   chaos: number
 }
@@ -16,6 +17,7 @@ export const DBSessionSchema = new Schema<DBSession, DBSessionModelType<DBSessio
   visioToken: { type: String, required: true },
   charactersBattleAllies: [{ type: String, required: true }],
   charactersBattleEnnemies: [{ type: String, required: true }],
+  charactersBoost: [{ type: String, required: true }],
   round: { type: String, required: true },
   relanceMj: { type: Number, required: true },
   chaos: { type: Number, required: true }
